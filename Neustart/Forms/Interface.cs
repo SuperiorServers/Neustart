@@ -4,9 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+[assembly: AssemblyVersion("1.0.*")]
 
 namespace Neustart.Forms
 {
@@ -16,6 +19,8 @@ namespace Neustart.Forms
         {
             InitializeComponent();
             this.MaximizeBox = false;
+
+            this.BuildDate.Text = Assembly.GetCallingAssembly().GetName().Version.ToString();
         }
 
         private void DataGridClick(object sender, DataGridViewCellEventArgs e)
