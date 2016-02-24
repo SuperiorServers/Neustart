@@ -39,6 +39,7 @@
             this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.OptionsPane = new System.Windows.Forms.MenuStrip();
             this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).BeginInit();
             this.OptionsPane.SuspendLayout();
@@ -104,7 +105,8 @@
             // OptionsPane
             // 
             this.OptionsPane.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NewAppButton});
+            this.NewAppButton,
+            this.gitHubToolStripMenuItem});
             this.OptionsPane.Location = new System.Drawing.Point(0, 0);
             this.OptionsPane.Name = "OptionsPane";
             this.OptionsPane.Size = new System.Drawing.Size(659, 24);
@@ -117,6 +119,13 @@
             this.NewAppButton.Size = new System.Drawing.Size(68, 20);
             this.NewAppButton.Text = "New App";
             this.NewAppButton.Click += new System.EventHandler(this.NewAppClick);
+            // 
+            // gitHubToolStripMenuItem
+            // 
+            this.gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
+            this.gitHubToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.gitHubToolStripMenuItem.Text = "GitHub";
+            this.gitHubToolStripMenuItem.Click += new System.EventHandler(this.gitHubToolStripMenuItem_Click);
             // 
             // Interface
             // 
@@ -150,5 +159,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn BtnEdit;
         private System.Windows.Forms.MenuStrip OptionsPane;
         private System.Windows.Forms.ToolStripMenuItem NewAppButton;
+        private System.Windows.Forms.ToolStripMenuItem gitHubToolStripMenuItem;
     }
 }

@@ -78,5 +78,10 @@ namespace Neustart.Forms
                 }
             }
         }
+
+        private void gitHubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/SuperiorServers/Neustart");
+        }
     }
 }
