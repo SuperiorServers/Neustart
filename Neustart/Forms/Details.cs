@@ -122,14 +122,14 @@ namespace Neustart.Forms
                 return;
             }
 
-            if (Neustart.Program.GetAppByID(NameTextBox.Text) != null)
-            {
-                MessageBox.Show("An app with that identifier already exists.", "Neustart", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return;
-            }
-
             if (curApp == null)
             { // New app
+                if (Neustart.Program.GetAppByID(NameTextBox.Text) != null)
+                {
+                    MessageBox.Show("An app with that identifier already exists.", "Neustart", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    return;
+                }
+
                 App newApp = new App();
                 newApp.ID = NameTextBox.Text;
                 newApp.Path = PathTextBox.Text;
