@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace Neustart.Forms
 {
-    public partial class Details : Form
+    public partial class Details : MaterialForm
     {
         private App curApp;
         private List<CheckBox> Affinities;
@@ -19,6 +21,14 @@ namespace Neustart.Forms
         public Details()
         {
             InitializeComponent();
+
+            this.FormBorderStyle = FormBorderStyle.None;
+
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+
             this.MaximizeBox = false;
 
             Affinities = new List<CheckBox>();
@@ -85,9 +95,7 @@ namespace Neustart.Forms
             PathTextBox.Text = app.Path;
             ArgsTextBox.Text = app.Args;
 
-            DeleteButton.Enabled = true;
-            DeleteButton.BackColor = System.Drawing.Color.FromArgb(255, 50, 50);
-            DeleteButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            ButtonDelete.Enabled = true;
 
             int i = 0;
             foreach (CheckBox aff in Affinities)
@@ -99,7 +107,57 @@ namespace Neustart.Forms
             CalculateAffinity();
         }
 
-        private void SubmitButton_Click(object sender, EventArgs e)
+        private void CalculateAffinity()
+        {
+            int affinity = 0;
+            int i = 0;
+            List<string> txt = new List<string>();
+            foreach (CheckBox aff in Affinities)
+            {
+                if (aff.Checked)
+                {
+                    txt.Add((i + 1).ToString());
+                    affinity = affinity | (1 << i);
+                }
+
+                i++;
+            }
+
+            if (txt.Count == 0)
+                AffinityButton.Text = "Choose Affinities";
+            else
+            {
+                string newText = String.Join(", ", txt);
+                AffinityButton.Text = newText;
+            }
+
+            newAffinity = affinity;
+        }
+
+        private void AffinityButton_Click(object sender, EventArgs e)
+        {
+            if (AffinityContainer.Visible)
+            {
+                AffinityContainer.Visible = false;
+                CalculateAffinity();
+            } else
+            {
+                AffinityContainer.Visible = true;
+                AffinityButton.Text = "Finish";
+            }
+        }
+
+        private void ButtonDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Are you sure you want to remove " + curApp.ID + "?", "Delete App", MessageBoxButtons.YesNo);
+            if (res == DialogResult.Yes)
+            {
+                Neustart.Program.RemoveApp(curApp);
+                this.Close();
+            }
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
             if (AffinityContainer.Visible)
                 AffinityButton_Click(null, null);
@@ -140,7 +198,8 @@ namespace Neustart.Forms
                 this.Close();
 
                 Neustart.Program.InitNewApp(newApp, true);
-            } else { // Editing app
+            }
+            else { // Editing app
                 string prevID = curApp.ID;
 
                 curApp.ID = NameTextBox.Text;
@@ -167,56 +226,6 @@ namespace Neustart.Forms
                         curApp.Start();
                     }
                 }
-            }
-        }
-
-        private void DeleteButton_Click(object sender, EventArgs e)
-        {
-            DialogResult res = MessageBox.Show("Are you sure you want to remove " + curApp.ID + "?", "Delete App", MessageBoxButtons.YesNo);
-            if (res == DialogResult.Yes)
-            {
-                Neustart.Program.RemoveApp(curApp);
-                this.Close();
-            }
-        }
-
-        private void CalculateAffinity()
-        {
-            int affinity = 0;
-            int i = 0;
-            List<string> txt = new List<string>();
-            foreach (CheckBox aff in Affinities)
-            {
-                if (aff.Checked)
-                {
-                    txt.Add((i + 1).ToString());
-                    affinity = affinity | (1 << i);
-                }
-
-                i++;
-            }
-
-            if (txt.Count == 0)
-                AffinityButton.Text = "Choose Affinities";
-            else
-            {
-                string newText = String.Join(", ", txt);
-                AffinityButton.Text = newText;
-            }
-
-            newAffinity = affinity;
-        }
-
-        private void AffinityButton_Click(object sender, EventArgs e)
-        {
-            if (AffinityContainer.Visible)
-            {
-                AffinityContainer.Visible = false;
-                CalculateAffinity();
-            } else
-            {
-                AffinityContainer.Visible = true;
-                AffinityButton.Text = "Finish";
             }
         }
     }
