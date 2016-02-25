@@ -22,5 +22,6 @@ Depending on adoption, Neustart's development will continue as it is seen fit. O
 # Building
 #### Prerequisites
 - NewtonSoft JSON Library: [NuGet](https://www.nuget.org/packages/Newtonsoft.Json/)  
+- MaterialSkin: [NuGet](https://www.nuget.org/packages/MaterialSkin/)  
 
-Apart from aquiring Json.NET, compiling Neustart should be very straightforward. Project files are already included and should be as simple as Project->Build.
+Apart from aquiring the prerequisites, compiling Neustart should be very straightforward. Project files are already included and should be as simple as Project->Build.
