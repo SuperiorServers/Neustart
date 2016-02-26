@@ -39,7 +39,7 @@ namespace Neustart.Forms
                         app.Start();
                     else
                         app.Stop();
-                    
+
                     Neustart.Program.SaveAppData();
 
                     break;
@@ -57,9 +57,18 @@ namespace Neustart.Forms
             }
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("This will close all your apps. Are you sure you want to close?", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
+
         private void OnClose(object sender, EventArgs e)
         {
             Neustart.Program.Close();
+           
         }
 
         private void NewAppClick(object sender, EventArgs e)
@@ -69,17 +78,31 @@ namespace Neustart.Forms
 
         private void DataCellPaint(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex == 1 && e.RowIndex > -1)
+            if (e.RowIndex > -1)
             {
                 string id = AppsTable.Rows[e.RowIndex].Cells[0].Value.ToString();
                 App app = Neustart.Program.GetAppByID(id);
 
-                if (app != null && app.Enabled && app.FrozenInterval != 0)
+                if (e.ColumnIndex == 1)
                 {
-                    e.CellStyle.BackColor = Color.FromArgb(255, 255 - (app.FrozenInterval * 20), 255 - (app.FrozenInterval * 20));
-                } else
+                    if (app != null && app.Enabled && app.FrozenInterval != 0)
+                        e.CellStyle.BackColor = Color.FromArgb(255, 255 - (app.FrozenInterval * 20), 255 - (app.FrozenInterval * 20));
+                    else
+                        e.CellStyle.BackColor = Color.White;
+                }
+
+                if (e.ColumnIndex == 2)
                 {
-                    e.CellStyle.BackColor = Color.White;
+                    if (app != null && app.Enabled)
+                    {
+                        e.CellStyle.BackColor = Color.FromArgb(255, 50, 50);
+                        e.CellStyle.SelectionBackColor = Color.FromArgb(255, 50, 50);
+                    }
+                    else
+                    {
+                        e.CellStyle.BackColor = Color.FromArgb(50, 255, 50);
+                        e.CellStyle.SelectionBackColor = Color.FromArgb(50, 255, 50);
+                    }
                 }
             }
         }

@@ -86,8 +86,8 @@ namespace Neustart.Forms
             ArgsTextBox.Text = app.Args;
 
             DeleteButton.Enabled = true;
-            DeleteButton.BackColor = System.Drawing.Color.FromArgb(255, 50, 50);
-            DeleteButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            DeleteButton.BackColor = Color.FromArgb(255, 50, 50);
+            DeleteButton.ForeColor = SystemColors.ControlLightLight;
 
             int i = 0;
             foreach (CheckBox aff in Affinities)
@@ -135,7 +135,7 @@ namespace Neustart.Forms
                 newApp.Path = PathTextBox.Text;
                 newApp.Args = ArgsTextBox.Text;
                 newApp.Affinities = newAffinity;
-                newApp.Enabled = true;
+                newApp.Enabled = false;
 
                 this.Close();
 
@@ -172,7 +172,7 @@ namespace Neustart.Forms
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Are you sure you want to remove " + curApp.ID + "?", "Delete App", MessageBoxButtons.YesNo);
+            DialogResult res = MessageBox.Show("Are you sure you want to remove " + curApp.ID + "?", "Delete App", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.Yes)
             {
                 Neustart.Program.RemoveApp(curApp);
