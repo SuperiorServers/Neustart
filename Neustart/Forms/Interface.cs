@@ -59,9 +59,16 @@ namespace Neustart.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (MessageBox.Show("This will close all your apps. Are you sure you want to close?", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            foreach (App app in Neustart.Program.GetApps())
             {
-                e.Cancel = true;
+                if (app.Enabled)
+                {
+                    if (MessageBox.Show("This will close all your apps. Are you sure you want to close?", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    {
+                        e.Cancel = true;
+                    }
+                    break;
+                }
             }
         }
 

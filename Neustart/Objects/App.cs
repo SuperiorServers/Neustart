@@ -86,6 +86,8 @@ namespace Neustart
 
             DataRow.Cells[1].Value = ID;
             DataRow.Cells[2].Value = "Start";
+
+            Process = null;
         }
 
         public void GetTitle()

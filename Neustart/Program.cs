@@ -85,6 +85,11 @@ namespace Neustart
             }
         }
 
+        public static List<App> GetApps()
+        {
+            return appList;
+        }
+
         public static App GetAppByID(string id)
         {
             return appDictionary.ContainsKey(id) ? appDictionary[id] : null;
