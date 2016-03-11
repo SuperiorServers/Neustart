@@ -37,6 +37,8 @@ namespace Neustart
         public string   Args        { get; set; }
         [JsonProperty]
         public int      Affinities  { get; set; }
+        [JsonProperty]
+        public int PID { get; set; } = -1;
 
         public string   WindowName  { get; set; }
         public Process  Process     { get; set; }
@@ -56,9 +58,29 @@ namespace Neustart
         public bool Start()
         {
             try {
-                Process = Process.Start(Path, Args);
-                Process.ProcessorAffinity = (IntPtr)Affinities;
-                Process.WaitForInputIdle();
+                bool resumed = false;
+
+                if (PID != -1)
+                {
+                    try
+                    {
+                        Process = Process.GetProcessById(PID);
+
+                        if (Process.MainModule.FileName != Path)
+                            throw new Exception();
+
+                        resumed = true;
+                    } catch { } // We'll have to start a new instance
+
+                    PID = -1;
+                }
+
+                if (!resumed)
+                {
+                    Process = Process.Start(Path, Args);
+                    Process.ProcessorAffinity = (IntPtr)Affinities;
+                    Process.WaitForInputIdle();
+                }
 
                 HandleHide();
 
@@ -152,6 +174,12 @@ namespace Neustart
 
             ShowWindow(hwnd, Hidden ? 0 : 1);
             EnableWindow(hwnd, Hidden ? false : true);
+        }
+
+        public void PrepareForResume()
+        {
+            if (Process != null)
+                PID = Process.Id;
         }
     }
 }

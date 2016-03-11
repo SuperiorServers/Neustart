@@ -59,17 +59,31 @@ namespace Neustart.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            bool doResume = false;
+            bool asked = false;
+
             foreach (App app in Neustart.Program.GetApps())
             {
                 if (app.Enabled)
                 {
-                    if (MessageBox.Show("This will close all your apps. Are you sure you want to close?", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    if (!asked)
                     {
-                        e.Cancel = true;
+                        asked = true;
+
+                        if (MessageBox.Show("Would you like Neustart to close your running apps? If you choose no, Neustart will try to reattach itself to their processes next time you open it.", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        {
+                            doResume = true;
+                        }
                     }
-                    break;
+
+                    if (doResume)
+                        app.PrepareForResume();
+                    else
+                        app.Process.Kill();
                 }
             }
+            
+            Neustart.Program.SaveAppData();
         }
 
         private void OnClose(object sender, EventArgs e)

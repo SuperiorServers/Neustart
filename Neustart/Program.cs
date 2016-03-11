@@ -134,12 +134,6 @@ namespace Neustart
         public static void Close()
         {
             workerThread.Abort();
-
-            foreach(App app in appList)
-            {
-                if (app.Enabled)
-                    app.Process.Kill();
-            }
         }
     }
 }

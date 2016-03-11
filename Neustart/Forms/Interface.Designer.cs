@@ -43,6 +43,7 @@
             this.BuildDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).BeginInit();
+            this.OptionsPane.SuspendLayout();
             this.SuspendLayout();
             // 
             // AppsTable
@@ -104,13 +105,15 @@
             // 
             // OptionsPane
             // 
+            this.OptionsPane.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.OptionsPane.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewAppButton,
+            this.gitHubToolStripMenuItem});
             this.OptionsPane.Location = new System.Drawing.Point(0, 0);
             this.OptionsPane.Name = "OptionsPane";
             this.OptionsPane.Size = new System.Drawing.Size(659, 24);
             this.OptionsPane.TabIndex = 1;
             this.OptionsPane.Text = "OptionsPanel";
-            this.OptionsPane.Items.Add(this.NewAppButton);
-            this.OptionsPane.Items.Add(this.gitHubToolStripMenuItem);
             // 
             // NewAppButton
             // 
@@ -143,13 +146,15 @@
             this.Controls.Add(this.BuildDate);
             this.Controls.Add(this.AppsTable);
             this.Controls.Add(this.OptionsPane);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Interface";
             this.Text = "Neustart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).EndInit();
+            this.OptionsPane.ResumeLayout(false);
+            this.OptionsPane.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
