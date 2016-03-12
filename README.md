@@ -2,7 +2,7 @@
 Neustart is a program designed in C# to automatically restart frozen and exited applications.
 It was created for SuperiorServers to replace the ancient ServerDoc software that required yearly updates and insisted on donations. But hey, open source is the best!
 ### Interface
-![Neustart](http://thed3vine.net/s/be09f4.png)  
+![Neustart](https://f.stonedpengu.in/index.php/s/N7BmGPFx4PN797G/download)  
 From the main interface you'll be presented with simple controls to start, stop, show, hide and edit an application's preferences.  
 **Note:** Neustart will remember your preference when you start or stop an application. So, stopping a program will mean that next time you open Neustart, it won't automatically start. That also means that a program that is started **will** automatically start next time Neustart is opened.
 
@@ -24,3 +24,4 @@ Depending on adoption, Neustart's development will continue as it is seen fit. O
 - NewtonSoft JSON Library: [NuGet](https://www.nuget.org/packages/Newtonsoft.Json/)  
 
 Apart from aquiring Json.NET, compiling Neustart should be very straightforward. Project files are already included and should be as simple as Project->Build.
+
