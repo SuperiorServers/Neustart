@@ -7,7 +7,7 @@ From the main interface you'll be presented with simple controls to start, stop,
 **Note:** Neustart will remember your preference when you start or stop an application. So, stopping a program will mean that next time you open Neustart, it won't automatically start. That also means that a program that is started **will** automatically start next time Neustart is opened.
 
 ### Adding applications
-![New App](http://thed3vine.net/s/25bb10.png)  
+![New App](https://f.stonedpengu.in/index.php/s/11TFSRyFs2ZK6KW/download)  
 Simple and easy to work, adding an application to be restarted is a breeze. Give it an identifier and tell it where and what to do! Optionally choose CPU cores for the application to run on to split your workload.
 
 ### Details
@@ -24,4 +24,3 @@ Depending on adoption, Neustart's development will continue as it is seen fit. O
 - NewtonSoft JSON Library: [NuGet](https://www.nuget.org/packages/Newtonsoft.Json/)  
 
 Apart from aquiring Json.NET, compiling Neustart should be very straightforward. Project files are already included and should be as simple as Project->Build.
-
