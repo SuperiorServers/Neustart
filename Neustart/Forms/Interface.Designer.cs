@@ -36,6 +36,8 @@
             this.BtnVisible = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEnabled = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Crashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Uptime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.OptionsPane = new System.Windows.Forms.MenuStrip();
             this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,12 +60,15 @@
             this.ProcName,
             this.BtnVisible,
             this.BtnEnabled,
-            this.BtnEdit});
-            this.AppsTable.Location = new System.Drawing.Point(12, 27);
+            this.BtnEdit,
+            this.Crashes,
+            this.Uptime});
+            this.AppsTable.Location = new System.Drawing.Point(18, 42);
+            this.AppsTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AppsTable.Name = "AppsTable";
             this.AppsTable.ReadOnly = true;
             this.AppsTable.RowHeadersVisible = false;
-            this.AppsTable.Size = new System.Drawing.Size(635, 236);
+            this.AppsTable.Size = new System.Drawing.Size(1000, 363);
             this.AppsTable.TabIndex = 0;
             this.AppsTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridClick);
             this.AppsTable.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataCellPaint);
@@ -74,13 +79,14 @@
             this.ID.Name = "ID";
             this.ID.ReadOnly = true;
             this.ID.Visible = false;
+            this.ID.Width = 5;
             // 
             // ProcName
             // 
             this.ProcName.HeaderText = "Name";
             this.ProcName.Name = "ProcName";
             this.ProcName.ReadOnly = true;
-            this.ProcName.Width = 440;
+            this.ProcName.Width = 362;
             // 
             // BtnVisible
             // 
@@ -103,51 +109,70 @@
             this.BtnEdit.ReadOnly = true;
             this.BtnEdit.Width = 64;
             // 
+            // Crashes
+            // 
+            this.Crashes.HeaderText = "Crashes";
+            this.Crashes.Name = "Crashes";
+            this.Crashes.ReadOnly = true;
+            this.Crashes.Width = 50;
+            // 
+            // Uptime
+            // 
+            this.Uptime.FillWeight = 60F;
+            this.Uptime.HeaderText = "Uptime";
+            this.Uptime.Name = "Uptime";
+            this.Uptime.ReadOnly = true;
+            this.Uptime.Width = 60;
+            // 
             // OptionsPane
             // 
+            this.OptionsPane.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.OptionsPane.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.OptionsPane.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NewAppButton,
             this.gitHubToolStripMenuItem});
             this.OptionsPane.Location = new System.Drawing.Point(0, 0);
             this.OptionsPane.Name = "OptionsPane";
-            this.OptionsPane.Size = new System.Drawing.Size(659, 24);
+            this.OptionsPane.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.OptionsPane.Size = new System.Drawing.Size(1036, 35);
             this.OptionsPane.TabIndex = 1;
             this.OptionsPane.Text = "OptionsPanel";
             // 
             // NewAppButton
             // 
             this.NewAppButton.Name = "NewAppButton";
-            this.NewAppButton.Size = new System.Drawing.Size(68, 20);
+            this.NewAppButton.Size = new System.Drawing.Size(98, 29);
             this.NewAppButton.Text = "New App";
             this.NewAppButton.Click += new System.EventHandler(this.NewAppClick);
             // 
             // gitHubToolStripMenuItem
             // 
             this.gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
-            this.gitHubToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.gitHubToolStripMenuItem.Size = new System.Drawing.Size(80, 29);
             this.gitHubToolStripMenuItem.Text = "GitHub";
             this.gitHubToolStripMenuItem.Click += new System.EventHandler(this.gitHubToolStripMenuItem_Click);
             // 
             // BuildDate
             // 
-            this.BuildDate.Location = new System.Drawing.Point(251, 263);
+            this.BuildDate.Location = new System.Drawing.Point(416, 405);
+            this.BuildDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.BuildDate.Name = "BuildDate";
-            this.BuildDate.Size = new System.Drawing.Size(400, 11);
+            this.BuildDate.Size = new System.Drawing.Size(600, 17);
             this.BuildDate.TabIndex = 2;
             this.BuildDate.Text = "BuildDate";
             this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Interface
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(659, 275);
+            this.ClientSize = new System.Drawing.Size(1036, 423);
             this.Controls.Add(this.BuildDate);
             this.Controls.Add(this.AppsTable);
             this.Controls.Add(this.OptionsPane);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Interface";
             this.Text = "Neustart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
@@ -164,14 +189,16 @@
 
         public System.Windows.Forms.DataGridView AppsTable;
         private System.Windows.Forms.BindingSource appBindingSource;
+        private System.Windows.Forms.MenuStrip OptionsPane;
+        private System.Windows.Forms.ToolStripMenuItem NewAppButton;
+        private System.Windows.Forms.ToolStripMenuItem gitHubToolStripMenuItem;
+        private System.Windows.Forms.Label BuildDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn ProcName;
         private System.Windows.Forms.DataGridViewButtonColumn BtnVisible;
         private System.Windows.Forms.DataGridViewButtonColumn BtnEnabled;
         private System.Windows.Forms.DataGridViewButtonColumn BtnEdit;
-        private System.Windows.Forms.MenuStrip OptionsPane;
-        private System.Windows.Forms.ToolStripMenuItem NewAppButton;
-        private System.Windows.Forms.ToolStripMenuItem gitHubToolStripMenuItem;
-        private System.Windows.Forms.Label BuildDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Crashes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Uptime;
     }
 }

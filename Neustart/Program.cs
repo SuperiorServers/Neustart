@@ -76,9 +76,14 @@ namespace Neustart
                         continue;
 
                     if (app.IsClosed() || app.IsCrashed())
+                    {
                         app.Start();
+                        app.AddCrash();
+                        SaveAppData();
+                    }
 
                     app.GetTitle();
+                    app.GetUptime();
                 }
 
                 System.Threading.Thread.Sleep(500);

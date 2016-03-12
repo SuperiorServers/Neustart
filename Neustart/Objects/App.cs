@@ -38,7 +38,9 @@ namespace Neustart
         [JsonProperty]
         public int      Affinities  { get; set; }
         [JsonProperty]
-        public int PID { get; set; } = -1;
+        public int      PID         { get; set; } = -1;
+        [JsonProperty]
+        public int      Crashes     { get; set; } = 0;
 
         public string   WindowName  { get; set; }
         public Process  Process     { get; set; }
@@ -53,6 +55,8 @@ namespace Neustart
 
             if (Enabled)
                 Start();
+
+            DataRow.Cells[5].Value = Crashes;
         }
 
         public bool Start()
@@ -78,6 +82,7 @@ namespace Neustart
                 if (!resumed)
                 {
                     Process = Process.Start(Path, Args);
+                   
                     Process.ProcessorAffinity = (IntPtr)Affinities;
                     Process.WaitForInputIdle();
                 }
@@ -130,6 +135,11 @@ namespace Neustart
             DataRow.Cells[1].Value = WindowName;
         }
 
+        public void GetUptime()
+        {
+            DataRow.Cells[6].Value = (Process == null) ? "00:00:00" : (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
+        }
+
         public bool IsClosed()
         {
             if (Process == null)
@@ -180,6 +190,18 @@ namespace Neustart
         {
             if (Process != null)
                 PID = Process.Id;
+        }
+
+        public void ResetCrashes()
+        {
+            Crashes = 0;
+            DataRow.Cells[5].Value = Crashes;
+        }
+
+        public void AddCrash()
+        {
+            Crashes++;
+            DataRow.Cells[5].Value = Crashes;
         }
     }
 }

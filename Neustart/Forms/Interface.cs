@@ -36,9 +36,14 @@ namespace Neustart.Forms
                     app.Enabled = !app.Enabled;
 
                     if (app.Enabled)
+                    {
                         app.Start();
+                        app.ResetCrashes();
+                    }
                     else
+                    {
                         app.Stop();
+                    }
 
                     Neustart.Program.SaveAppData();
 
