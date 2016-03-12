@@ -32,6 +32,8 @@ namespace Neustart
         [JsonProperty]
         public bool     Enabled     { get; set; }
         [JsonProperty]
+        public bool     Hidden      { get; set; } = false;
+        [JsonProperty]
         public string   Path        { get; set; }
         [JsonProperty]
         public string   Args        { get; set; }
@@ -40,13 +42,14 @@ namespace Neustart
         [JsonProperty]
         public int      PID         { get; set; } = -1;
         [JsonProperty]
+        public DateTime StartTime   { get; set; }
+        [JsonProperty]
         public int      Crashes     { get; set; } = 0;
 
         public string   WindowName  { get; set; }
         public Process  Process     { get; set; }
-        public bool     Hidden      { get; set; }
 
-        public System.Windows.Forms.DataGridViewRow DataRow { get; set; }
+        public DataGridViewRow DataRow { get; set; }
         public int FrozenInterval = 0;
 
         public void Init()
@@ -70,13 +73,14 @@ namespace Neustart
                     {
                         Process = Process.GetProcessById(PID);
 
-                        if (Process.MainModule.FileName != Path)
+                        if (Process.StartTime != StartTime)
                             throw new Exception();
 
                         resumed = true;
                     } catch { } // We'll have to start a new instance
 
                     PID = -1;
+                    StartTime = DateTime.MinValue;
                 }
 
                 if (!resumed)
@@ -85,6 +89,8 @@ namespace Neustart
                    
                     Process.ProcessorAffinity = (IntPtr)Affinities;
                     Process.WaitForInputIdle();
+
+                    StartTime = Process.StartTime;
                 }
 
                 HandleHide();
