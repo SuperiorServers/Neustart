@@ -31,6 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Interface));
             this.AppsTable = new System.Windows.Forms.DataGridView();
+            this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.OptionsPane = new System.Windows.Forms.MenuStrip();
+            this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.BuildDate = new System.Windows.Forms.Label();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProcName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BtnVisible = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -38,11 +43,8 @@
             this.BtnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Crashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Uptime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.OptionsPane = new System.Windows.Forms.MenuStrip();
-            this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BuildDate = new System.Windows.Forms.Label();
+            this.CPU = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Ram = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).BeginInit();
             this.OptionsPane.SuspendLayout();
@@ -62,7 +64,9 @@
             this.BtnEnabled,
             this.BtnEdit,
             this.Crashes,
-            this.Uptime});
+            this.Uptime,
+            this.CPU,
+            this.Ram});
             this.AppsTable.Location = new System.Drawing.Point(18, 42);
             this.AppsTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AppsTable.Name = "AppsTable";
@@ -72,57 +76,6 @@
             this.AppsTable.TabIndex = 0;
             this.AppsTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridClick);
             this.AppsTable.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataCellPaint);
-            // 
-            // ID
-            // 
-            this.ID.HeaderText = "ID";
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            this.ID.Visible = false;
-            this.ID.Width = 5;
-            // 
-            // ProcName
-            // 
-            this.ProcName.HeaderText = "Name";
-            this.ProcName.Name = "ProcName";
-            this.ProcName.ReadOnly = true;
-            this.ProcName.Width = 362;
-            // 
-            // BtnVisible
-            // 
-            this.BtnVisible.HeaderText = "";
-            this.BtnVisible.Name = "BtnVisible";
-            this.BtnVisible.ReadOnly = true;
-            this.BtnVisible.Width = 64;
-            // 
-            // BtnEnabled
-            // 
-            this.BtnEnabled.HeaderText = "";
-            this.BtnEnabled.Name = "BtnEnabled";
-            this.BtnEnabled.ReadOnly = true;
-            this.BtnEnabled.Width = 64;
-            // 
-            // BtnEdit
-            // 
-            this.BtnEdit.HeaderText = "";
-            this.BtnEdit.Name = "BtnEdit";
-            this.BtnEdit.ReadOnly = true;
-            this.BtnEdit.Width = 64;
-            // 
-            // Crashes
-            // 
-            this.Crashes.HeaderText = "Crashes";
-            this.Crashes.Name = "Crashes";
-            this.Crashes.ReadOnly = true;
-            this.Crashes.Width = 50;
-            // 
-            // Uptime
-            // 
-            this.Uptime.FillWeight = 60F;
-            this.Uptime.HeaderText = "Uptime";
-            this.Uptime.Name = "Uptime";
-            this.Uptime.ReadOnly = true;
-            this.Uptime.Width = 60;
             // 
             // OptionsPane
             // 
@@ -162,6 +115,73 @@
             this.BuildDate.Text = "BuildDate";
             this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // ID
+            // 
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Visible = false;
+            this.ID.Width = 5;
+            // 
+            // ProcName
+            // 
+            this.ProcName.HeaderText = "Name";
+            this.ProcName.Name = "ProcName";
+            this.ProcName.ReadOnly = true;
+            this.ProcName.Width = 257;
+            // 
+            // BtnVisible
+            // 
+            this.BtnVisible.HeaderText = "";
+            this.BtnVisible.Name = "BtnVisible";
+            this.BtnVisible.ReadOnly = true;
+            this.BtnVisible.Width = 64;
+            // 
+            // BtnEnabled
+            // 
+            this.BtnEnabled.HeaderText = "";
+            this.BtnEnabled.Name = "BtnEnabled";
+            this.BtnEnabled.ReadOnly = true;
+            this.BtnEnabled.Width = 64;
+            // 
+            // BtnEdit
+            // 
+            this.BtnEdit.HeaderText = "";
+            this.BtnEdit.Name = "BtnEdit";
+            this.BtnEdit.ReadOnly = true;
+            this.BtnEdit.Width = 64;
+            // 
+            // Crashes
+            // 
+            this.Crashes.HeaderText = "Crashes";
+            this.Crashes.Name = "Crashes";
+            this.Crashes.ReadOnly = true;
+            this.Crashes.Width = 50;
+            // 
+            // Uptime
+            // 
+            this.Uptime.FillWeight = 60F;
+            this.Uptime.HeaderText = "Uptime";
+            this.Uptime.Name = "Uptime";
+            this.Uptime.ReadOnly = true;
+            this.Uptime.Width = 60;
+            // 
+            // CPU
+            // 
+            this.CPU.FillWeight = 35F;
+            this.CPU.HeaderText = "CPU";
+            this.CPU.Name = "CPU";
+            this.CPU.ReadOnly = true;
+            this.CPU.Width = 45;
+            // 
+            // Ram
+            // 
+            this.Ram.FillWeight = 50F;
+            this.Ram.HeaderText = "Ram";
+            this.Ram.Name = "Ram";
+            this.Ram.ReadOnly = true;
+            this.Ram.Width = 60;
+            // 
             // Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -200,5 +220,7 @@
         private System.Windows.Forms.DataGridViewButtonColumn BtnEdit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Crashes;
         private System.Windows.Forms.DataGridViewTextBoxColumn Uptime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CPU;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Ram;
     }
 }

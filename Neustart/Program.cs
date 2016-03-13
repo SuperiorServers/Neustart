@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using Newtonsoft.Json;
-using System.Reflection;
 
 namespace Neustart
 {
@@ -19,7 +16,8 @@ namespace Neustart
 
         private static string filePath = "Apps.json";
 
-        private static System.Threading.Thread workerThread;
+        private static Thread CrashThread;
+        private static Thread InfoThread;
         public static Forms.Interface MainWindow { get; set; }
 
         [STAThread]
@@ -33,8 +31,11 @@ namespace Neustart
 
             LoadAppData();
 
-            workerThread = new System.Threading.Thread(WorkerThread);
-            workerThread.Start();
+            CrashThread = new Thread(CalcCrashes);
+            CrashThread.Start();
+
+            InfoThread = new Thread(CalcInfo);
+            InfoThread.Start();
 
             Application.Run(MainWindow);
 
@@ -51,7 +52,7 @@ namespace Neustart
             appDictionary = new Dictionary<string, App>();
             appList = JsonConvert.DeserializeObject<List<App>>(File.ReadAllText(filePath));
 
-            foreach(App app in appList)
+            foreach (App app in appList)
             {
                 InitNewApp(app, false);
             }
@@ -66,11 +67,11 @@ namespace Neustart
             return;
         }
 
-        private static void WorkerThread()
+        private static void CalcCrashes()
         {
             while (MainWindow.Visible)
             {
-                foreach(App app in appList)
+                foreach (App app in appList)
                 {
                     if (!app.Enabled)
                         continue;
@@ -81,12 +82,28 @@ namespace Neustart
                         app.AddCrash();
                         SaveAppData();
                     }
+                }
+                Thread.Sleep(500);
+            }
+        }
 
+        private static void CalcInfo()
+        {
+            while (MainWindow.Visible)
+            {
+                foreach (App app in appList)
+                {
                     app.GetTitle();
+
+                    if (!app.Enabled || app.IsClosed() || app.IsCrashed())
+                        continue;
+                    
                     app.GetUptime();
+                    app.GetCPU();
+                    app.GetRam();
                 }
 
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
         }
 
@@ -138,7 +155,8 @@ namespace Neustart
 
         public static void Close()
         {
-            workerThread.Abort();
+            CrashThread.Abort();
+            InfoThread.Abort();
         }
     }
 }

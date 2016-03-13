@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace Neustart
 {
@@ -50,6 +46,9 @@ namespace Neustart
         public Process  Process     { get; set; }
 
         public DataGridViewRow DataRow { get; set; }
+        public string ProcessName { get; set; }
+        public PerformanceCounter CPUCounter { get; set; }
+        public PerformanceCounter RamCounter { get; set; }
         public int FrozenInterval = 0;
 
         public void Init()
@@ -123,6 +122,28 @@ namespace Neustart
             Process = null;
         }
 
+        public string GetProcessName()
+        {
+            var processes = Process.GetProcessesByName(Process.ProcessName);
+
+            if (processes.Length == 1)
+                return Process.ProcessName;
+
+            int count = -1;
+            foreach (Process proc in processes)
+            {
+                count++;
+                if (proc.Id == Process.Id)
+                {
+                    if (count == 0)
+                        return Process.ProcessName;
+                    else
+                        return Process.ProcessName + "#" + count;
+                }
+            }
+            return Process.ProcessName + "#" + processes.Length;
+        }
+
         public void GetTitle()
         {
             if (Process != null)
@@ -143,7 +164,39 @@ namespace Neustart
 
         public void GetUptime()
         {
-            DataRow.Cells[6].Value = (Process == null) ? "00:00:00" : (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
+            if (Process != null)
+                DataRow.Cells[6].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
+        }
+
+        public void GetCPU() // TODO, calculate this based on affinities
+        {
+            if (Process != null)
+            {
+                var currentprocname = GetProcessName();
+                if (CPUCounter == null || (CPUCounter.InstanceName != currentprocname))
+                {
+                    CPUCounter = new PerformanceCounter("Process", "% Processor Time", currentprocname);
+                    ProcessName = currentprocname;
+                }
+
+                DataRow.Cells[7].Value = Math.Round(CPUCounter.NextValue(), 1) + "%";
+            }
+
+        }
+
+        public void GetRam()
+        {
+            if (Process != null)
+            {
+                var currentprocname = GetProcessName();
+                if (RamCounter == null || (RamCounter.InstanceName != currentprocname))
+                {
+                    RamCounter = new PerformanceCounter("Process", "Working Set", currentprocname);
+                }
+
+                DataRow.Cells[8].Value = Math.Round(RamCounter.NextValue() / 1024 / 1024, 1) + " MB";
+            }
+               
         }
 
         public bool IsClosed()
