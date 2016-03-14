@@ -42,6 +42,13 @@ namespace Neustart.Forms
             this.DeleteButton = new System.Windows.Forms.Button();
             this.AffinityContainer = new System.Windows.Forms.Panel();
             this.AffinityButton = new System.Windows.Forms.Button();
+            this.PriorityLabel = new System.Windows.Forms.Label();
+            this.RadioBelow = new System.Windows.Forms.RadioButton();
+            this.RadioNormal = new System.Windows.Forms.RadioButton();
+            this.RadioHigh = new System.Windows.Forms.RadioButton();
+            this.RadioReal = new System.Windows.Forms.RadioButton();
+            this.RadioLow = new System.Windows.Forms.RadioButton();
+            this.RadioAbove = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // NameTextBox
@@ -104,7 +111,7 @@ namespace Neustart.Forms
             // SubmitButton
             // 
             this.SubmitButton.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.SubmitButton.Location = new System.Drawing.Point(11, 130);
+            this.SubmitButton.Location = new System.Drawing.Point(10, 161);
             this.SubmitButton.Name = "SubmitButton";
             this.SubmitButton.Size = new System.Drawing.Size(157, 30);
             this.SubmitButton.TabIndex = 8;
@@ -116,7 +123,7 @@ namespace Neustart.Forms
             // 
             this.DeleteButton.Enabled = false;
             this.DeleteButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DeleteButton.Location = new System.Drawing.Point(174, 130);
+            this.DeleteButton.Location = new System.Drawing.Point(173, 161);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(157, 30);
             this.DeleteButton.TabIndex = 8;
@@ -145,11 +152,91 @@ namespace Neustart.Forms
             this.AffinityButton.UseVisualStyleBackColor = true;
             this.AffinityButton.Click += new System.EventHandler(this.AffinityButton_Click);
             // 
+            // PriorityLabel
+            // 
+            this.PriorityLabel.AutoSize = true;
+            this.PriorityLabel.Location = new System.Drawing.Point(9, 126);
+            this.PriorityLabel.Name = "PriorityLabel";
+            this.PriorityLabel.Size = new System.Drawing.Size(63, 13);
+            this.PriorityLabel.TabIndex = 11;
+            this.PriorityLabel.Text = "CPU Priority";
+            // 
+            // RadioBelow
+            // 
+            this.RadioBelow.AutoSize = true;
+            this.RadioBelow.Location = new System.Drawing.Point(59, 140);
+            this.RadioBelow.Name = "RadioBelow";
+            this.RadioBelow.Size = new System.Drawing.Size(54, 17);
+            this.RadioBelow.TabIndex = 12;
+            this.RadioBelow.Text = "Below";
+            this.RadioBelow.UseVisualStyleBackColor = true;
+            // 
+            // RadioNormal
+            // 
+            this.RadioNormal.AutoSize = true;
+            this.RadioNormal.Checked = true;
+            this.RadioNormal.Location = new System.Drawing.Point(116, 140);
+            this.RadioNormal.Name = "RadioNormal";
+            this.RadioNormal.Size = new System.Drawing.Size(58, 17);
+            this.RadioNormal.TabIndex = 13;
+            this.RadioNormal.TabStop = true;
+            this.RadioNormal.Text = "Normal";
+            this.RadioNormal.UseVisualStyleBackColor = true;
+            // 
+            // RadioHigh
+            // 
+            this.RadioHigh.AutoSize = true;
+            this.RadioHigh.Location = new System.Drawing.Point(238, 140);
+            this.RadioHigh.Name = "RadioHigh";
+            this.RadioHigh.Size = new System.Drawing.Size(47, 17);
+            this.RadioHigh.TabIndex = 14;
+            this.RadioHigh.Text = "High";
+            this.RadioHigh.UseVisualStyleBackColor = true;
+            // 
+            // RadioReal
+            // 
+            this.RadioReal.AutoSize = true;
+            this.RadioReal.Location = new System.Drawing.Point(288, 140);
+            this.RadioReal.Name = "RadioReal";
+            this.RadioReal.Size = new System.Drawing.Size(47, 17);
+            this.RadioReal.TabIndex = 15;
+            this.RadioReal.Text = "Real";
+            this.RadioReal.UseVisualStyleBackColor = true;
+            // 
+            // RadioLow
+            // 
+            this.RadioLow.AutoSize = true;
+            this.RadioLow.Location = new System.Drawing.Point(12, 140);
+            this.RadioLow.Name = "RadioLow";
+            this.RadioLow.Size = new System.Drawing.Size(45, 17);
+            this.RadioLow.TabIndex = 16;
+            this.RadioLow.TabStop = true;
+            this.RadioLow.Text = "Low";
+            this.RadioLow.UseVisualStyleBackColor = true;
+            // 
+            // RadioAbove
+            // 
+            this.RadioAbove.AutoSize = true;
+            this.RadioAbove.Location = new System.Drawing.Point(178, 140);
+            this.RadioAbove.Name = "RadioAbove";
+            this.RadioAbove.Size = new System.Drawing.Size(56, 17);
+            this.RadioAbove.TabIndex = 17;
+            this.RadioAbove.TabStop = true;
+            this.RadioAbove.Text = "Above";
+            this.RadioAbove.UseVisualStyleBackColor = true;
+            // 
             // Details
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(342, 171);
+            this.ClientSize = new System.Drawing.Size(342, 202);
+            this.Controls.Add(this.RadioAbove);
+            this.Controls.Add(this.RadioLow);
+            this.Controls.Add(this.RadioReal);
+            this.Controls.Add(this.RadioHigh);
+            this.Controls.Add(this.RadioNormal);
+            this.Controls.Add(this.RadioBelow);
+            this.Controls.Add(this.PriorityLabel);
             this.Controls.Add(this.AffinityButton);
             this.Controls.Add(this.AffinityContainer);
             this.Controls.Add(this.DeleteButton);
@@ -184,5 +271,12 @@ namespace Neustart.Forms
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Panel AffinityContainer;
         private System.Windows.Forms.Button AffinityButton;
+        private System.Windows.Forms.Label PriorityLabel;
+        private System.Windows.Forms.RadioButton RadioBelow;
+        private System.Windows.Forms.RadioButton RadioNormal;
+        private System.Windows.Forms.RadioButton RadioHigh;
+        private System.Windows.Forms.RadioButton RadioReal;
+        private System.Windows.Forms.RadioButton RadioLow;
+        private System.Windows.Forms.RadioButton RadioAbove;
     }
 }

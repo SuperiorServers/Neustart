@@ -121,7 +121,7 @@ namespace Neustart
         {
             appDictionary[app.ID] = app;
 
-            object[] rowData = new object[] { app.ID, app.ID, app.Enabled ? "Stop" : "Start", app.Hidden ? "Show" : "Hide", "Edit" };
+            object[] rowData = new object[] { app.ID, app.ID, "0", "00:00:00", "0%", "0 MB", app.Enabled ? "Stop" : "Start", app.Hidden ? "Show" : "Hide", "Edit" };
             app.DataRow = MainWindow.AppsTable.Rows[MainWindow.AppsTable.Rows.Add(rowData)];
 
             app.Init();

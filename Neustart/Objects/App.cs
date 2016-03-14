@@ -4,12 +4,23 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Neustart
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class App
     {
+        private static List<ProcessPriorityClass> Priorities = new List<ProcessPriorityClass>()
+        {
+            ProcessPriorityClass.Idle,
+            ProcessPriorityClass.BelowNormal,
+            ProcessPriorityClass.Normal,
+            ProcessPriorityClass.AboveNormal,
+            ProcessPriorityClass.High,
+            ProcessPriorityClass.RealTime
+        };
+
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
         [DllImport("user32.dll")]
@@ -36,6 +47,8 @@ namespace Neustart
         [JsonProperty]
         public int      Affinities  { get; set; }
         [JsonProperty]
+        public int      Priority { get; set; } = 2;
+        [JsonProperty]
         public int      PID         { get; set; } = -1;
         [JsonProperty]
         public DateTime StartTime   { get; set; }
@@ -46,7 +59,7 @@ namespace Neustart
         public Process  Process     { get; set; }
 
         public DataGridViewRow DataRow { get; set; }
-        public string ProcessName { get; set; }
+
         public PerformanceCounter CPUCounter { get; set; }
         public PerformanceCounter RamCounter { get; set; }
         public int FrozenInterval = 0;
@@ -58,7 +71,7 @@ namespace Neustart
             if (Enabled)
                 Start();
 
-            DataRow.Cells[5].Value = Crashes;
+            DataRow.Cells[2].Value = Crashes;
         }
 
         public bool Start()
@@ -87,6 +100,8 @@ namespace Neustart
                     Process = Process.Start(Path, Args);
                    
                     Process.ProcessorAffinity = (IntPtr)Affinities;
+                    Process.PriorityClass = Priorities[Priority];
+
                     Process.WaitForInputIdle();
 
                     StartTime = Process.StartTime;
@@ -94,7 +109,7 @@ namespace Neustart
 
                 HandleHide();
 
-                DataRow.Cells[2].Value = "Stop";
+                DataRow.Cells[6].Value = "Stop";
 
                 return true;
             } catch (Exception e)
@@ -102,7 +117,7 @@ namespace Neustart
                 MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
 
                 Enabled = false;
-                DataRow.Cells[2].Value = "Start";
+                DataRow.Cells[6].Value = "Start";
 
                 return false;
             }
@@ -117,7 +132,7 @@ namespace Neustart
             Process.Close();
 
             DataRow.Cells[1].Value = ID;
-            DataRow.Cells[2].Value = "Start";
+            DataRow.Cells[6].Value = "Start";
 
             Process = null;
         }
@@ -165,21 +180,20 @@ namespace Neustart
         public void GetUptime()
         {
             if (Process != null)
-                DataRow.Cells[6].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
+                DataRow.Cells[3].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
         }
 
         public void GetCPU() // TODO, calculate this based on affinities
         {
             if (Process != null)
             {
-                var currentprocname = GetProcessName();
-                if (CPUCounter == null || (CPUCounter.InstanceName != currentprocname))
-                {
-                    CPUCounter = new PerformanceCounter("Process", "% Processor Time", currentprocname);
-                    ProcessName = currentprocname;
-                }
+                try {
+                    var currentprocname = GetProcessName();
+                    if (CPUCounter == null || (CPUCounter.InstanceName != currentprocname))
+                        CPUCounter = new PerformanceCounter("Process", "% Processor Time", currentprocname);
 
-                DataRow.Cells[7].Value = Math.Round(CPUCounter.NextValue(), 1) + "%";
+                    DataRow.Cells[4].Value = Math.Round(CPUCounter.NextValue(), 1) + "%";
+                } catch (Exception) { }
             }
 
         }
@@ -188,13 +202,13 @@ namespace Neustart
         {
             if (Process != null)
             {
-                var currentprocname = GetProcessName();
-                if (RamCounter == null || (RamCounter.InstanceName != currentprocname))
-                {
-                    RamCounter = new PerformanceCounter("Process", "Working Set", currentprocname);
-                }
+                try {
+                    var currentprocname = GetProcessName();
+                    if (RamCounter == null || (RamCounter.InstanceName != currentprocname))
+                        RamCounter = new PerformanceCounter("Process", "Working Set", currentprocname);
 
-                DataRow.Cells[8].Value = Math.Round(RamCounter.NextValue() / 1024 / 1024, 1) + " MB";
+                    DataRow.Cells[5].Value = Math.Round(RamCounter.NextValue() / 1024 / 1024, 1) + " MB";
+                } catch(Exception) { }
             }
                
         }
@@ -229,7 +243,7 @@ namespace Neustart
 
             HandleHide();
 
-            DataRow.Cells[3].Value = Hidden ? "Show" : "Hide";
+            DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
             return Hidden;
         }
@@ -254,13 +268,13 @@ namespace Neustart
         public void ResetCrashes()
         {
             Crashes = 0;
-            DataRow.Cells[5].Value = Crashes;
+            DataRow.Cells[2].Value = Crashes;
         }
 
         public void AddCrash()
         {
             Crashes++;
-            DataRow.Cells[5].Value = Crashes;
+            DataRow.Cells[2].Value = Crashes;
         }
     }
 }

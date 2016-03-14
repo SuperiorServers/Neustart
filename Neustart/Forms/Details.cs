@@ -10,11 +10,14 @@ namespace Neustart.Forms
         private App curApp;
         private List<CheckBox> Affinities;
         private int newAffinity;
+        private List<RadioButton> Priorities;
 
         public Details()
         {
             InitializeComponent();
             this.MaximizeBox = false;
+
+            //AffinityContainer.Location = new System.Drawing.Point(174, 43);
 
             Affinities = new List<CheckBox>();
             List<Label> lbls = new List<Label>();
@@ -70,6 +73,16 @@ namespace Neustart.Forms
             }
 
             CalculateAffinity();
+
+            Priorities = new List<RadioButton>
+            {
+                RadioLow,
+                RadioBelow,
+                RadioNormal,
+                RadioAbove,
+                RadioHigh,
+                RadioReal
+            };
         }
 
         public void SetApp(App app)
@@ -92,6 +105,8 @@ namespace Neustart.Forms
             }
 
             CalculateAffinity();
+
+            Priorities[app.Priority].Checked = true;
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
@@ -130,6 +145,16 @@ namespace Neustart.Forms
                 newApp.Path = PathTextBox.Text;
                 newApp.Args = ArgsTextBox.Text;
                 newApp.Affinities = newAffinity;
+
+                for (int i = 0; i < Priorities.Count; i++)
+                {
+                    if (Priorities[i].Checked)
+                    {
+                        newApp.Priority = i;
+                        break;
+                    }
+                }
+
                 newApp.Enabled = false;
 
                 this.Close();
@@ -142,6 +167,15 @@ namespace Neustart.Forms
                 curApp.Path = PathTextBox.Text;
                 curApp.Args = ArgsTextBox.Text;
                 curApp.Affinities = newAffinity;
+
+                for (int i = 0; i < Priorities.Count; i++)
+                {
+                    if (Priorities[i].Checked)
+                    {
+                        curApp.Priority = i;
+                        break;
+                    }
+                }
 
                 this.Close();
 

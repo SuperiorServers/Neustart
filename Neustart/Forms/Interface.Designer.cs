@@ -58,15 +58,15 @@
             this.AppsTable.AllowUserToResizeRows = false;
             this.AppsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.AppsTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ID,
-            this.ProcName,
-            this.BtnVisible,
-            this.BtnEnabled,
-            this.BtnEdit,
-            this.Crashes,
-            this.Uptime,
-            this.CPU,
-            this.Ram});
+            this.ID, // 0
+            this.ProcName, // 1
+            this.Crashes, // 5->2
+            this.Uptime, // 6->3
+            this.CPU, // 7->4
+            this.Ram, // 8->5
+            this.BtnVisible, // 2->6
+            this.BtnEnabled, // 3->7
+            this.BtnEdit}); // 4->8
             this.AppsTable.Location = new System.Drawing.Point(18, 42);
             this.AppsTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AppsTable.Name = "AppsTable";

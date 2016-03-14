@@ -26,7 +26,7 @@ namespace Neustart.Forms
 
             switch (e.ColumnIndex)
             {
-                case 2: //StartStop
+                case 6: //StartStop
                     app.Enabled = !app.Enabled;
 
                     if (app.Enabled)
@@ -42,11 +42,11 @@ namespace Neustart.Forms
                     Neustart.Program.SaveAppData();
 
                     break;
-                case 3: //HideShow
+                case 7: //HideShow
                     app.ToggleHide();
 
                     break;
-                case 4: //Edit
+                case 8: //Edit
                     Details detailsForm = new Details();
                     detailsForm.SetApp(app);
 
@@ -111,7 +111,7 @@ namespace Neustart.Forms
                         e.CellStyle.BackColor = Color.White;
                 }
 
-                if (e.ColumnIndex == 2)
+                if (e.ColumnIndex == 6)
                 {
                     if (app != null && app.Enabled)
                     {
