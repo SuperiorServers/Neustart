@@ -2,12 +2,12 @@
 Neustart is a program designed in C# to automatically restart frozen and exited applications.
 It was created for SuperiorServers to replace the ancient ServerDoc software that required yearly updates and insisted on donations. But hey, open source is the best!
 ### Interface
-![Neustart](https://f.stonedpengu.in/index.php/s/N7BmGPFx4PN797G/download)  
+![Neustart](https://f.stonedpengu.in/index.php/s/ngOxBsotddkgEL2/download)  
 From the main interface you'll be presented with simple controls to start, stop, show, hide and edit an application's preferences.  
 **Note:** Neustart will remember your preference when you start or stop an application. So, stopping a program will mean that next time you open Neustart, it won't automatically start. That also means that a program that is started **will** automatically start next time Neustart is opened.
 
 ### Adding applications
-![New App](https://f.stonedpengu.in/index.php/s/11TFSRyFs2ZK6KW/download)  
+![New App](https://f.stonedpengu.in/index.php/s/Ue5VxIvNj4rzDi7/download)  
 Simple and easy to work, adding an application to be restarted is a breeze. Give it an identifier and tell it where and what to do! Optionally choose CPU cores for the application to run on to split your workload.
 
 ### Details
