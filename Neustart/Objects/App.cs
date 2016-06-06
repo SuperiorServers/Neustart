@@ -259,6 +259,7 @@ namespace Neustart
 
         public bool IsRestarting()
         {
+            return RestartTimer != null;
         }
 
         public bool ToggleHide()

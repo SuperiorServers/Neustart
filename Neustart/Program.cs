@@ -73,6 +73,7 @@ namespace Neustart
             {
                 foreach (App app in appList)
                 {
+                    if (!app.Enabled || app.IsRestarting())
                         continue;
 
                     if (app.IsClosed() || app.IsCrashed())
