@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Timers;
 
 namespace Neustart
 {
@@ -63,6 +64,8 @@ namespace Neustart
         public PerformanceCounter CPUCounter { get; set; }
         public PerformanceCounter RamCounter { get; set; }
         public int FrozenInterval = 0;
+
+        public System.Timers.Timer RestartTimer { get; set; }
 
         public void Init()
         {
@@ -123,6 +126,23 @@ namespace Neustart
             }
         }
 
+        public void Restart()
+        {
+            WindowName = "Restarting...";
+            DataRow.Cells[1].Value = WindowName;
+
+            RestartTimer = new System.Timers.Timer(3000);
+            RestartTimer.Elapsed += _Restart;
+            RestartTimer.AutoReset = false;
+            RestartTimer.Enabled = true;
+        }
+
+        public void _Restart(Object source, ElapsedEventArgs e)
+        {
+            Start();
+            RestartTimer = null;
+        }
+
         public void Stop()
         {
             if (Process == null)
@@ -141,9 +161,6 @@ namespace Neustart
         {
             var processes = Process.GetProcessesByName(Process.ProcessName);
 
-            if (processes.Length == 1)
-                return Process.ProcessName;
-
             int count = -1;
             foreach (Process proc in processes)
             {
@@ -161,7 +178,11 @@ namespace Neustart
 
         public void GetTitle()
         {
-            if (Process != null)
+            if (IsRestarting())
+            {
+                WindowName = "Restarting...";
+            }
+            else if (Process != null)
             {
                 IntPtr hwnd = Process.MainWindowHandle;
 
@@ -171,7 +192,9 @@ namespace Neustart
                 GetWindowText(new HandleRef(this, hwnd), sBuilder, sBuilder.Capacity);
 
                 WindowName = sBuilder.ToString();
-            } else {
+            }
+            else
+            {
                 WindowName = ID;
             }
             DataRow.Cells[1].Value = WindowName;
@@ -183,7 +206,7 @@ namespace Neustart
                 DataRow.Cells[3].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
         }
 
-        public void GetCPU() // TODO, calculate this based on affinities
+        public void GetCPU() // TODO, make this more accurate? Is that even possible?
         {
             if (Process != null)
             {
@@ -232,6 +255,10 @@ namespace Neustart
                 FrozenInterval++;
 
             return FrozenInterval >= 10;
+        }
+
+        public bool IsRestarting()
+        {
         }
 
         public bool ToggleHide()
