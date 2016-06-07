@@ -266,14 +266,14 @@ namespace Neustart
 
         public bool ToggleHide()
         {
+            Hidden = !Hidden;
+
+            DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
+
             if (!Enabled)
                 return Hidden;
 
-            Hidden = !Hidden;
-
             HandleHide();
-
-            DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
             return Hidden;
         }
