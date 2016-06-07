@@ -148,6 +148,8 @@ namespace Neustart
             if (Process == null)
                 return;
 
+            EnableWindow(Process.MainWindowHandle, true);
+
             Process.CloseMainWindow();
             Process.Close();
 
