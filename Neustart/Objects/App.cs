@@ -61,8 +61,6 @@ namespace Neustart
 
         public DataGridViewRow DataRow { get; set; }
 
-        public PerformanceCounter CPUCounter { get; set; }
-        public PerformanceCounter RamCounter { get; set; }
         public int FrozenInterval = 0;
 
         public System.Timers.Timer RestartTimer { get; set; }
@@ -79,6 +77,12 @@ namespace Neustart
 
         public bool Start()
         {
+            if (RestartTimer != null)
+            {
+                RestartTimer.Stop();
+                RestartTimer = null;
+            }
+
             try {
                 bool resumed = false;
 
@@ -115,7 +119,7 @@ namespace Neustart
                 DataRow.Cells[6].Value = "Stop";
 
                 return true;
-            } catch (Exception e)
+            } catch (Exception)
             {
                 MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
 
@@ -140,18 +144,20 @@ namespace Neustart
         public void _Restart(Object source, ElapsedEventArgs e)
         {
             Start();
-            RestartTimer = null;
         }
 
         public void Stop()
         {
+            if (RestartTimer != null)
+            {
+                RestartTimer.Stop();
+                RestartTimer = null;
+            }
+
             if (Process == null)
                 return;
 
-            EnableWindow(Process.MainWindowHandle, true);
-
-            Process.CloseMainWindow();
-            Process.Close();
+            Process.Kill();
 
             DataRow.Cells[1].Value = ID;
             DataRow.Cells[6].Value = "Start";
@@ -208,34 +214,23 @@ namespace Neustart
                 DataRow.Cells[3].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
         }
 
-        public void GetCPU() // TODO, make this more accurate? Is that even possible?
+        public void RefreshProcess()
         {
             if (Process != null)
-            {
-                try {
-                    var currentprocname = GetProcessName();
-                    if (CPUCounter == null || (CPUCounter.InstanceName != currentprocname))
-                        CPUCounter = new PerformanceCounter("Process", "% Processor Time", currentprocname);
+                Process.Refresh();
+        }
 
-                    DataRow.Cells[4].Value = Math.Round(CPUCounter.NextValue(), 1) + "%";
-                } catch (Exception) { }
-            }
+        public void GetCPU()
+        {
+            if (Process != null)
+                DataRow.Cells[4].Value = Convert.ToString((Program.CpuMilliseconds > 0) ? Math.Round((Process.PrivilegedProcessorTime.Milliseconds / Program.CpuMilliseconds) * 100, 1) : 1) + "%";
 
         }
 
         public void GetRam()
         {
             if (Process != null)
-            {
-                try {
-                    var currentprocname = GetProcessName();
-                    if (RamCounter == null || (RamCounter.InstanceName != currentprocname))
-                        RamCounter = new PerformanceCounter("Process", "Working Set", currentprocname);
-
-                    DataRow.Cells[5].Value = Math.Round(RamCounter.NextValue() / 1024 / 1024, 1) + " MB";
-                } catch(Exception) { }
-            }
-               
+                DataRow.Cells[5].Value = (Process.PrivateMemorySize64 / 1048576) + " MB";
         }
 
         public bool IsClosed()
@@ -270,10 +265,8 @@ namespace Neustart
 
             DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
-            if (!Enabled)
-                return Hidden;
-
-            HandleHide();
+            if (Enabled)
+                HandleHide();
 
             return Hidden;
         }

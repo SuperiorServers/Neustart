@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
 using Newtonsoft.Json;
@@ -19,6 +20,8 @@ namespace Neustart
         private static Thread CrashThread;
         private static Thread InfoThread;
         public static Forms.Interface MainWindow { get; set; }
+
+        public static decimal CpuMilliseconds { get; set; } = 0;
 
         [STAThread]
         static int Main(string[] args)
@@ -91,14 +94,27 @@ namespace Neustart
         {
             while (MainWindow.Visible)
             {
+                CpuMilliseconds = 0;
+                foreach (Process proc in Process.GetProcesses()) {
+                    try
+                    {
+                        if (!proc.HasExited)
+                        {
+                            proc.Refresh();
+                            CpuMilliseconds += proc.PrivilegedProcessorTime.Milliseconds;
+                        }
+                    } catch (Exception) { }
+                }
+
                 foreach (App app in appList)
                 {
                     app.GetTitle();
 
                     if (!app.Enabled || app.IsClosed() || app.IsCrashed())
                         continue;
-                    
+
                     app.GetUptime();
+                    app.RefreshProcess();
                     app.GetCPU();
                     app.GetRam();
                 }
