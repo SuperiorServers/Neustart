@@ -132,6 +132,9 @@ namespace Neustart
 
         public void Restart()
         {
+            if (IsRestarting()) // shouldnt happen
+                return;
+
             WindowName = "Restarting...";
             DataRow.Cells[1].Value = WindowName;
 
@@ -148,7 +151,7 @@ namespace Neustart
 
         public void Stop()
         {
-            if (RestartTimer != null)
+            if (IsRestarting())
             {
                 RestartTimer.Stop();
                 RestartTimer = null;
@@ -261,7 +264,7 @@ namespace Neustart
 
         public bool ToggleHide()
         {
-            Hidden = !Hidden;
+            Hidden = !Hidden && Enabled;
 
             DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
