@@ -22,7 +22,7 @@ namespace Neustart.Forms
             var senderGrid = (DataGridView)sender;
             DataGridViewRow curRow = senderGrid.Rows[e.RowIndex];
 
-            App app = Neustart.Program.GetAppByID(curRow.Cells[0].Value.ToString());
+            App app = Program.GetAppByID(curRow.Cells[0].Value.ToString());
 
             switch (e.ColumnIndex)
             {
@@ -39,7 +39,7 @@ namespace Neustart.Forms
                         app.Stop();
                     }
 
-                    Neustart.Program.SaveAppData();
+                    Program.SaveAppData();
 
                     break;
                 case 7: //HideShow
@@ -61,7 +61,7 @@ namespace Neustart.Forms
             bool doResume = false;
             bool asked = false;
 
-            foreach (App app in Neustart.Program.GetApps())
+            foreach (App app in Program.GetApps())
             {
                 if (app.Enabled)
                 {
@@ -75,19 +75,17 @@ namespace Neustart.Forms
                         }
                     }
 
-                    if (doResume)
-                        app.PrepareForResume();
-                    else
+                    if (!doResume)
                         app.Process.Kill();
                 }
             }
             
-            Neustart.Program.SaveAppData();
+            Program.SaveAppData();
         }
 
         private void OnClose(object sender, EventArgs e)
         {
-            Neustart.Program.Close();
+            Program.Close();
            
         }
 
@@ -101,7 +99,7 @@ namespace Neustart.Forms
             if (e.RowIndex > -1)
             {
                 string id = AppsTable.Rows[e.RowIndex].Cells[0].Value.ToString();
-                App app = Neustart.Program.GetAppByID(id);
+                App app = Program.GetAppByID(id);
 
                 if (e.ColumnIndex == 1)
                 {

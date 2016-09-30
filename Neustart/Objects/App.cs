@@ -34,30 +34,30 @@ namespace Neustart
         public static extern int GetWindowTextLength(HandleRef hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
-        
-        [JsonProperty]
-        public string   ID          { get; set; }
-        [JsonProperty]
-        public bool     Enabled     { get; set; }
-        [JsonProperty]
-        public bool     Hidden      { get; set; } = false;
-        [JsonProperty]
-        public string   Path        { get; set; }
-        [JsonProperty]
-        public string   Args        { get; set; }
-        [JsonProperty]
-        public int      Affinities  { get; set; }
-        [JsonProperty]
-        public int      Priority { get; set; } = 2;
-        [JsonProperty]
-        public int      PID         { get; set; } = -1;
-        [JsonProperty]
-        public DateTime StartTime   { get; set; }
-        [JsonProperty]
-        public int      Crashes     { get; set; } = 0;
 
-        public string   WindowName  { get; set; }
-        public Process  Process     { get; set; }
+        [JsonProperty]
+        public string ID { get; set; }
+        [JsonProperty]
+        public bool Enabled { get; set; }
+        [JsonProperty]
+        public bool Hidden { get; set; } = false;
+        [JsonProperty]
+        public string Path { get; set; }
+        [JsonProperty]
+        public string Args { get; set; }
+        [JsonProperty]
+        public int Affinities { get; set; }
+        [JsonProperty]
+        public int Priority { get; set; } = 2;
+        [JsonProperty]
+        public int PID { get; set; } = -1;
+        [JsonProperty]
+        public DateTime StartTime { get; set; }
+        [JsonProperty]
+        public int Crashes { get; set; } = 0;
+
+        public string WindowName { get; set; }
+        public Process Process { get; set; }
 
         public DataGridViewRow DataRow { get; set; }
 
@@ -77,7 +77,7 @@ namespace Neustart
 
         public bool Start()
         {
-            if (RestartTimer != null)
+            if (IsRestarting())
             {
                 RestartTimer.Stop();
                 RestartTimer = null;
@@ -105,13 +105,14 @@ namespace Neustart
                 if (!resumed)
                 {
                     Process = Process.Start(Path, Args);
-                   
+
                     Process.ProcessorAffinity = (IntPtr)Affinities;
                     Process.PriorityClass = Priorities[Priority];
 
                     Process.WaitForInputIdle();
 
                     StartTime = Process.StartTime;
+                    PID = Process.Id;
                 }
 
                 HandleHide();
@@ -144,10 +145,8 @@ namespace Neustart
             RestartTimer.Enabled = true;
         }
 
-        public void _Restart(Object source, ElapsedEventArgs e)
-        {
-            Start();
-        }
+        private void _Restart(Object source, ElapsedEventArgs e)
+            => Start();
 
         public void Stop()
         {
@@ -157,13 +156,13 @@ namespace Neustart
                 RestartTimer = null;
             }
 
-            if (Process == null)
+            DataRow.Cells[1].Value = ID;
+            DataRow.Cells[6].Value = "Start";
+
+            if (Process == null || IsClosed())
                 return;
 
             Process.Kill();
-
-            DataRow.Cells[1].Value = ID;
-            DataRow.Cells[6].Value = "Start";
 
             Process = null;
         }
@@ -214,7 +213,20 @@ namespace Neustart
         public void GetUptime()
         {
             if (Process != null)
-                DataRow.Cells[3].Value = (DateTime.Now - Process.StartTime).ToString(@"hh\:mm\:ss");
+            {
+                double total = (DateTime.Now - Process.StartTime).TotalSeconds;
+                double hours = Math.Floor(total / 3600);
+                double minutes = Math.Floor((total % 3600) / 60);
+                double seconds = Math.Floor(total - (hours * 3600) - (minutes * 60));
+
+                if (minutes < 10)
+                    minutes = 0;
+
+                if (seconds < 10)
+                    seconds = 0;
+
+                DataRow.Cells[3].Value = hours + ":" + minutes + ":" + seconds;
+            } 
         }
 
         public void RefreshProcess()
@@ -226,8 +238,11 @@ namespace Neustart
         public void GetCPU()
         {
             if (Process != null)
-                DataRow.Cells[4].Value = Convert.ToString((Program.CpuMilliseconds > 0) ? Math.Round((Process.PrivilegedProcessorTime.Milliseconds / Program.CpuMilliseconds) * 100, 1) : 1) + "%";
-
+            {
+                decimal thiscputime = Process.PrivilegedProcessorTime.Milliseconds;
+                decimal programcputime = Program.CpuMilliseconds - thiscputime;
+                DataRow.Cells[4].Value = Convert.ToString((Program.CpuMilliseconds > 0) ? Math.Round((thiscputime / programcputime) * 100, 1) : 1) + "%";
+            }
         }
 
         public void GetRam()
@@ -237,12 +252,7 @@ namespace Neustart
         }
 
         public bool IsClosed()
-        {
-            if (Process == null)
-                return false;
-
-            return Process.HasExited;
-        }
+            => (Process == null) || Process.HasExited;
 
         public bool IsCrashed()
         {
@@ -258,18 +268,18 @@ namespace Neustart
         }
 
         public bool IsRestarting()
-        {
-            return RestartTimer != null;
-        }
+            => RestartTimer != null;
 
         public bool ToggleHide()
         {
-            Hidden = !Hidden && Enabled;
+            if (!Enabled)
+                return Hidden;
+
+            Hidden = !Hidden;
+
+            HandleHide();
 
             DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
-
-            if (Enabled)
-                HandleHide();
 
             return Hidden;
         }
@@ -283,12 +293,6 @@ namespace Neustart
 
             ShowWindow(hwnd, Hidden ? 0 : 1);
             EnableWindow(hwnd, Hidden ? false : true);
-        }
-
-        public void PrepareForResume()
-        {
-            if (Process != null)
-                PID = Process.Id;
         }
 
         public void ResetCrashes()
