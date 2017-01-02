@@ -57,42 +57,13 @@ namespace Neustart.Forms
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            bool doResume = false;
-            bool asked = false;
-
-            foreach (App app in Program.GetApps())
-            {
-                if (app.Enabled)
-                {
-                    if (!asked)
-                    {
-                        asked = true;
-
-                        if (MessageBox.Show("Would you like Neustart to close your running apps? If you choose no, Neustart will try to reattach itself to their processes next time you open it.", "Neustart", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                        {
-                            doResume = true;
-                        }
-                    }
-
-                    if (!doResume)
-                        app.Process.Kill();
-                }
-            }
-            
-            Program.SaveAppData();
-        }
+            => Program.SaveAppData();
 
         private void OnClose(object sender, EventArgs e)
-        {
-            Program.Close();
-           
-        }
+            => Program.Close();
 
         private void NewAppClick(object sender, EventArgs e)
-        {
-            new Details().ShowDialog();
-        }
+            => new Details().ShowDialog();
 
         private void DataCellPaint(object sender, DataGridViewCellPaintingEventArgs e)
         {
@@ -126,8 +97,6 @@ namespace Neustart.Forms
         }
 
         private void gitHubToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/SuperiorServers/Neustart");
-        }
+            => System.Diagnostics.Process.Start("https://github.com/SuperiorServers/Neustart");
     }
 }

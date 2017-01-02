@@ -192,7 +192,7 @@ namespace Neustart
             {
                 WindowName = "Restarting...";
             }
-            else if (Process != null)
+            else if (!IsClosed())
             {
                 IntPtr hwnd = Process.MainWindowHandle;
 

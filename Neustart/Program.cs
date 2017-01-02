@@ -17,8 +17,7 @@ namespace Neustart
 
         private static string filePath = "Apps.json";
 
-        private static Thread CrashThread;
-        private static Thread InfoThread;
+        private static Thread ThinkThread;
         public static Forms.Interface MainWindow { get; set; }
 
         public static decimal CpuMilliseconds { get; set; } = 0;
@@ -34,48 +33,22 @@ namespace Neustart
 
             LoadAppData();
 
-            CrashThread = new Thread(CalcCrashes);
-            CrashThread.Start();
-
-            InfoThread = new Thread(CalcInfo);
-            InfoThread.Start();
+            ThinkThread = new Thread(AppThink);
+            ThinkThread.Start();
 
             Application.Run(MainWindow);
 
             return 0;
         }
 
-        private static void LoadAppData()
-        {
-            if (!File.Exists(filePath))
-            {
-                File.WriteAllText(filePath, "[]");
-            }
-
-            appDictionary = new Dictionary<string, App>();
-            appList = JsonConvert.DeserializeObject<List<App>>(File.ReadAllText(filePath));
-
-            foreach (App app in appList)
-            {
-                InitNewApp(app, false);
-            }
-
-            return;
-        }
-
-        public static void SaveAppData()
-        {
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(appList, Formatting.Indented));
-
-            return;
-        }
-
-        private static void CalcCrashes()
+        private static void AppThink()
         {
             while (MainWindow.Visible)
             {
                 foreach (App app in appList)
                 {
+                    app.GetTitle();
+
                     if (!app.Enabled || app.IsRestarting())
                         continue;
 
@@ -85,17 +58,18 @@ namespace Neustart
                         app.AddCrash();
                         SaveAppData();
                     }
+                    else
+                    {
+                        app.GetUptime();
+                        app.RefreshProcess();
+                        app.GetCPU();
+                        app.GetRam();
+                    }
                 }
-                Thread.Sleep(500);
-            }
-        }
 
-        private static void CalcInfo()
-        {
-            while (MainWindow.Visible)
-            {
                 CpuMilliseconds = 0;
-                foreach (Process proc in Process.GetProcesses()) {
+                foreach (Process proc in Process.GetProcesses())
+                {
                     try
                     {
                         if (!proc.HasExited)
@@ -103,35 +77,35 @@ namespace Neustart
                             proc.Refresh();
                             CpuMilliseconds += proc.PrivilegedProcessorTime.Milliseconds;
                         }
-                    } catch (Exception) { }
-                }
-
-                foreach (App app in appList)
-                {
-                    app.GetTitle();
-
-                    if (!app.Enabled || app.IsClosed() || app.IsCrashed())
-                        continue;
-
-                    app.GetUptime();
-                    app.RefreshProcess();
-                    app.GetCPU();
-                    app.GetRam();
+                    }
+                    catch (Exception) { }
                 }
 
                 Thread.Sleep(1000);
             }
         }
 
-        public static List<App> GetApps()
+        private static void LoadAppData()
         {
-            return appList;
+            if (!File.Exists(filePath))
+                File.WriteAllText(filePath, "[]");
+
+            appDictionary = new Dictionary<string, App>();
+            appList = JsonConvert.DeserializeObject<List<App>>(File.ReadAllText(filePath));
+
+            foreach (App app in appList)
+                InitNewApp(app, false);
         }
 
+        public static void SaveAppData()
+            => File.WriteAllText(filePath, JsonConvert.SerializeObject(appList, Formatting.Indented));
+
+        public static List<App> GetApps()
+            => appList;
+
         public static App GetAppByID(string id)
-        {
-            return appDictionary.ContainsKey(id) ? appDictionary[id] : null;
-        }
+            => appDictionary.ContainsKey(id) ? appDictionary[id] : null;
+
 
         public static void InitNewApp(App app, bool created)
         {
@@ -170,9 +144,6 @@ namespace Neustart
         }
 
         public static void Close()
-        {
-            CrashThread.Abort();
-            InfoThread.Abort();
-        }
+            => ThinkThread.Abort();
     }
 }
