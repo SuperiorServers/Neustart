@@ -26,10 +26,6 @@ namespace Neustart
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
         [DllImport("user32.dll")]
         private static extern bool EnableWindow(IntPtr hwnd, bool enable);
-        [DllImport("user32.dll")]
-        private static extern bool MoveWindow(IntPtr handle, int x, int y, int width, int height, bool redraw);
-        [DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetWindowTextLength(HandleRef hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -92,8 +88,8 @@ namespace Neustart
                     {
                         Process = Process.GetProcessById(PID);
 
-                        if (Process.StartTime != StartTime)
-                            throw new Exception();
+                       // if (Process.StartTime != StartTime)
+                        //    throw new Exception();
 
                         resumed = true;
                     } catch { } // We'll have to start a new instance
@@ -104,7 +100,12 @@ namespace Neustart
 
                 if (!resumed)
                 {
-                    Process = Process.Start(Path, Args);
+                    ProcessStartInfo info = new ProcessStartInfo();
+                    info.WorkingDirectory = System.IO.Path.GetDirectoryName(Path);
+                    info.Arguments = Args;
+                    info.FileName = Path;
+
+                    Process = Process.Start(info);
 
                     Process.ProcessorAffinity = (IntPtr)Affinities;
                     Process.PriorityClass = Priorities[Priority];
@@ -120,7 +121,8 @@ namespace Neustart
                 DataRow.Cells[6].Value = "Stop";
 
                 return true;
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
 
