@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Text;
+using System.Timers;
+using System.Threading;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Timers;
+using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace Neustart
 {
@@ -59,7 +60,9 @@ namespace Neustart
 
         public int FrozenInterval = 0;
 
-        public System.Timers.Timer RestartTimer { get; set; }
+        private Thread RestartThread;
+
+        public bool IsRestarting = false;
 
         public void Init()
         {
@@ -69,16 +72,13 @@ namespace Neustart
                 Start();
 
             DataRow.Cells[2].Value = Crashes;
+
+            RestartThread = new Thread(HandleCrashes);
+            RestartThread.Start();
         }
 
         public bool Start()
         {
-            if (IsRestarting())
-            {
-                RestartTimer.Stop();
-                RestartTimer = null;
-            }
-
             try {
                 bool resumed = false;
 
@@ -112,56 +112,83 @@ namespace Neustart
 
                     Process.WaitForInputIdle();
 
-                    StartTime = Process.StartTime;
-                    PID = Process.Id;
                 }
+
+                StartTime = Process.StartTime;
+                PID = Process.Id;
 
                 HandleHide();
 
                 DataRow.Cells[6].Value = "Stop";
 
+                IsRestarting = false;
+
                 return true;
             }
             catch (Exception)
             {
-                MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
+                if (Enabled)
+                    MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
 
                 Enabled = false;
+                IsRestarting = false;
                 DataRow.Cells[6].Value = "Start";
 
                 return false;
             }
         }
 
-        public void Restart()
+        private void HandleCrashes()
         {
-            if (IsRestarting()) // shouldnt happen
-                return;
+            while (true)
+            {
+                if (Enabled && (IsClosed() || IsCrashed()))
+                {
+                    IsRestarting = true;
 
-            WindowName = "Restarting...";
-            DataRow.Cells[1].Value = WindowName;
+                    AddCrash();
+                    Program.SaveAppData();
 
-            RestartTimer = new System.Timers.Timer(3000);
-            RestartTimer.Elapsed += _Restart;
-            RestartTimer.AutoReset = false;
-            RestartTimer.Enabled = true;
+                    Thread.Sleep(2000); // Delay a restart, in the past there have been issues with sockets not being freed if we don't wait.
+
+                    if (Enabled && (IsClosed() || IsCrashed()))
+                        Start();
+                }
+
+                Thread.Sleep(100);
+            }
         }
 
-        private void _Restart(Object source, ElapsedEventArgs e)
-            => Start();
+        public void Close()
+        {
+            if (RestartThread != null)
+                RestartThread.Abort();
+        }
+
+        public bool IsClosed()
+            => (Process == null) || Process.HasExited;
+
+        public bool IsCrashed()
+        {
+            if (Process == null)
+                return false;
+
+            if (Process.Responding)
+                FrozenInterval = 0;
+            else
+                FrozenInterval++;
+
+            return FrozenInterval >= 10;
+        }
 
         public void Stop()
         {
-            if (IsRestarting())
-            {
-                RestartTimer.Stop();
-                RestartTimer = null;
-            }
-
             DataRow.Cells[1].Value = ID;
             DataRow.Cells[6].Value = "Start";
 
-            if (Process == null || IsClosed())
+            IsRestarting = false;
+
+            if (IsClosed())
                 return;
 
             Process.Kill();
@@ -190,7 +217,7 @@ namespace Neustart
 
         public void GetTitle()
         {
-            if (IsRestarting())
+            if (IsRestarting)
             {
                 WindowName = "Restarting...";
             }
@@ -209,6 +236,7 @@ namespace Neustart
             {
                 WindowName = ID;
             }
+
             DataRow.Cells[1].Value = WindowName;
         }
 
@@ -252,25 +280,6 @@ namespace Neustart
             if (Process != null)
                 DataRow.Cells[5].Value = (Process.PrivateMemorySize64 / 1048576) + " MB";
         }
-
-        public bool IsClosed()
-            => (Process == null) || Process.HasExited;
-
-        public bool IsCrashed()
-        {
-            if (Process == null)
-                return false;
-
-            if (Process.Responding)
-                FrozenInterval = 0;
-            else
-                FrozenInterval++;
-
-            return FrozenInterval >= 10;
-        }
-
-        public bool IsRestarting()
-            => RestartTimer != null;
 
         public bool ToggleHide()
         {

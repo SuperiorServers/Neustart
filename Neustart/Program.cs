@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.IO;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Neustart
@@ -49,22 +49,13 @@ namespace Neustart
                 {
                     app.GetTitle();
 
-                    if (!app.Enabled || app.IsRestarting())
+                    if (!app.Enabled || app.IsClosed() || app.IsCrashed() || app.IsRestarting)
                         continue;
 
-                    if (app.IsClosed() || app.IsCrashed())
-                    {
-                        app.Restart();
-                        app.AddCrash();
-                        SaveAppData();
-                    }
-                    else
-                    {
-                        app.GetUptime();
-                        app.RefreshProcess();
-                        app.GetCPU();
-                        app.GetRam();
-                    }
+                    app.GetUptime();
+                    app.RefreshProcess();
+                    app.GetCPU();
+                    app.GetRam();
                 }
 
                 CpuMilliseconds = 0;
@@ -78,7 +69,7 @@ namespace Neustart
                             CpuMilliseconds += proc.PrivilegedProcessorTime.Milliseconds;
                         }
                     }
-                    catch (Exception) { }
+                    catch { }
                 }
 
                 Thread.Sleep(1000);
@@ -136,6 +127,8 @@ namespace Neustart
             if (app.Enabled)
                 app.Stop();
 
+            app.Close();
+
             MainWindow.AppsTable.Rows.Remove(app.DataRow);
             appDictionary.Remove(app.ID);
             appList.Remove(app);
@@ -144,6 +137,11 @@ namespace Neustart
         }
 
         public static void Close()
-            => ThinkThread.Abort();
+        {
+            ThinkThread.Abort();
+
+            foreach (App app in appList)
+                app.Close();
+        }
     }
 }
