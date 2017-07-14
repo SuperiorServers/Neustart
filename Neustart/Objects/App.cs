@@ -115,6 +115,9 @@ namespace Neustart
 
                     hwnd = Process.MainWindowHandle;
                     HWND = hwnd.ToInt32();
+
+                    if (Hidden)
+                        HandleHide();
                 }
 
                 StartTime = Process.StartTime;

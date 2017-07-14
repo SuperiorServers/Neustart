@@ -98,5 +98,22 @@ namespace Neustart.Forms
 
         private void gitHubToolStripMenuItem_Click(object sender, EventArgs e)
             => System.Diagnostics.Process.Start("https://github.com/SuperiorServers/Neustart");
+
+        private void OnResized(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                TaskTrayIcon.Visible = true;
+                TaskTrayIcon.ShowBalloonTip(5000);
+                ShowInTaskbar = false;
+            }
+        }
+
+        private void TaskTrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowInTaskbar = true;
+            WindowState = FormWindowState.Normal;
+            TaskTrayIcon.Visible = false;
+        }
     }
 }

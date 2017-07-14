@@ -36,7 +36,7 @@
             this.Crashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Uptime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPU = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Ram = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Memory = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BtnVisible = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEnabled = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -45,6 +45,7 @@
             this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
             this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BuildDate = new System.Windows.Forms.Label();
+            this.TaskTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).BeginInit();
             this.OptionsPane.SuspendLayout();
@@ -63,7 +64,7 @@
             this.Crashes,
             this.Uptime,
             this.CPU,
-            this.Ram,
+            this.Memory,
             this.BtnVisible,
             this.BtnEnabled,
             this.BtnEdit});
@@ -115,13 +116,13 @@
             this.CPU.ReadOnly = true;
             this.CPU.Width = 45;
             // 
-            // Ram
+            // Memory
             // 
-            this.Ram.FillWeight = 50F;
-            this.Ram.HeaderText = "Memory";
-            this.Ram.Name = "Memory";
-            this.Ram.ReadOnly = true;
-            this.Ram.Width = 60;
+            this.Memory.FillWeight = 50F;
+            this.Memory.HeaderText = "Memory";
+            this.Memory.Name = "Memory";
+            this.Memory.ReadOnly = true;
+            this.Memory.Width = 60;
             // 
             // BtnVisible
             // 
@@ -181,6 +182,16 @@
             this.BuildDate.Text = "BuildDate";
             this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // TaskTrayIcon
+            // 
+            this.TaskTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.TaskTrayIcon.BalloonTipText = "We\'re still running and restarting your apps in the background!";
+            this.TaskTrayIcon.BalloonTipTitle = "Neustart";
+            this.TaskTrayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("TaskTrayIcon.Icon")));
+            this.TaskTrayIcon.Text = "Neustart";
+            this.TaskTrayIcon.Visible = true;
+            this.TaskTrayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TaskTrayIcon_MouseDoubleClick);
+            // 
             // Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -194,6 +205,7 @@
             this.Name = "Interface";
             this.Text = "Neustart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
+            this.Resize += new System.EventHandler(this.OnResized);
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).EndInit();
             this.OptionsPane.ResumeLayout(false);
@@ -216,9 +228,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Crashes;
         private System.Windows.Forms.DataGridViewTextBoxColumn Uptime;
         private System.Windows.Forms.DataGridViewTextBoxColumn CPU;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Ram;
         private System.Windows.Forms.DataGridViewButtonColumn BtnVisible;
         private System.Windows.Forms.DataGridViewButtonColumn BtnEnabled;
         private System.Windows.Forms.DataGridViewButtonColumn BtnEdit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Memory;
+        private System.Windows.Forms.NotifyIcon TaskTrayIcon;
     }
 }
