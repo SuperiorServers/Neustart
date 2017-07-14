@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Neustart
 {
@@ -22,11 +23,27 @@ namespace Neustart
 
         public static decimal CpuMilliseconds { get; set; } = 0;
 
+        private static bool AlreadyRunning()
+        {
+            foreach (Process process in Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName))
+                if (process.Id != Process.GetCurrentProcess().Id)
+                    if (Assembly.GetExecutingAssembly().Location.Replace("/", "\\") == Process.GetCurrentProcess().MainModule.FileName)
+                        return true;
+            
+            return false;
+        }
+
         [STAThread]
         static int Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            if (AlreadyRunning())
+            {
+                MessageBox.Show(null, "This copy of Neustart is already running. Look in your system tray!", "Neustart");
+                return 0;
+            }
 
             MainWindow = new Forms.Interface();
             MainWindow.Show();
