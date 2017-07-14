@@ -118,8 +118,8 @@
             // Ram
             // 
             this.Ram.FillWeight = 50F;
-            this.Ram.HeaderText = "Ram";
-            this.Ram.Name = "Ram";
+            this.Ram.HeaderText = "Memory";
+            this.Ram.Name = "Memory";
             this.Ram.ReadOnly = true;
             this.Ram.Width = 60;
             // 
