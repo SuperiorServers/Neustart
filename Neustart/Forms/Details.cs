@@ -248,5 +248,18 @@ namespace Neustart.Forms
                 AffinityButton.Text = "Finish";
             }
         }
+
+        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BrowseButton_Click(object sender, EventArgs e)
+        {
+            if (PathFileBrowserDiag.ShowDialog() == DialogResult.OK)
+            {
+                this.PathTextBox.Text = PathFileBrowserDiag.FileName;
+            }
+        }
     }
 }

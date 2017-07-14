@@ -49,6 +49,9 @@ namespace Neustart
         [JsonProperty]
         public int PID { get; set; } = -1;
         [JsonProperty]
+        public int HWND { get; set; } = -1;
+        private IntPtr hwnd;
+        [JsonProperty]
         public DateTime StartTime { get; set; }
         [JsonProperty]
         public int Crashes { get; set; } = 0;
@@ -88,10 +91,8 @@ namespace Neustart
                     {
                         Process = Process.GetProcessById(PID);
 
-                       // if (Process.StartTime != StartTime)
-                        //    throw new Exception();
-
                         resumed = true;
+                        hwnd = new IntPtr(HWND);
                     } catch { } // We'll have to start a new instance
 
                     PID = -1;
@@ -110,16 +111,17 @@ namespace Neustart
                     Process.ProcessorAffinity = (IntPtr)Affinities;
                     Process.PriorityClass = Priorities[Priority];
 
-                    Process.WaitForInputIdle();
+                    Process.WaitForInputIdle(5000);
 
+                    hwnd = Process.MainWindowHandle;
+                    HWND = hwnd.ToInt32();
                 }
 
                 StartTime = Process.StartTime;
                 PID = Process.Id;
 
-                HandleHide();
-
                 DataRow.Cells[6].Value = "Stop";
+                DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
                 IsRestarting = false;
 
@@ -184,6 +186,9 @@ namespace Neustart
         public void Stop()
         {
             DataRow.Cells[1].Value = ID;
+            DataRow.Cells[3].Value = "00:00:00";
+            DataRow.Cells[4].Value = "0%";
+            DataRow.Cells[5].Value = "0 MB";
             DataRow.Cells[6].Value = "Start";
 
             IsRestarting = false;
@@ -223,8 +228,6 @@ namespace Neustart
             }
             else if (!IsClosed())
             {
-                IntPtr hwnd = Process.MainWindowHandle;
-
                 int capacity = GetWindowTextLength(new HandleRef(this, hwnd)) * 2;
                 StringBuilder sBuilder = new StringBuilder(capacity);
 
@@ -234,10 +237,13 @@ namespace Neustart
             }
             else
             {
-                WindowName = ID;
+                WindowName = null;
             }
 
-            DataRow.Cells[1].Value = WindowName;
+            if (WindowName != null)
+                DataRow.Cells[1].Value = ID + " | " + WindowName;
+            else
+                DataRow.Cells[1].Value = ID;
         }
 
         public void GetUptime()
@@ -249,13 +255,7 @@ namespace Neustart
                 double minutes = Math.Floor((total % 3600) / 60);
                 double seconds = Math.Floor(total - (hours * 3600) - (minutes * 60));
 
-                if (minutes < 10)
-                    minutes = 0;
-
-                if (seconds < 10)
-                    seconds = 0;
-
-                DataRow.Cells[3].Value = hours + ":" + minutes + ":" + seconds;
+                DataRow.Cells[3].Value = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
             } 
         }
 
@@ -292,6 +292,8 @@ namespace Neustart
 
             DataRow.Cells[7].Value = Hidden ? "Show" : "Hide";
 
+            Program.SaveAppData();
+
             return Hidden;
         }
 
@@ -299,8 +301,6 @@ namespace Neustart
         {
             if (Process == null)
                 return;
-
-            IntPtr hwnd = Process.MainWindowHandle;
 
             ShowWindow(hwnd, Hidden ? 0 : 1);
             EnableWindow(hwnd, Hidden ? false : true);

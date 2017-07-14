@@ -31,11 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Interface));
             this.AppsTable = new System.Windows.Forms.DataGridView();
-            this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.OptionsPane = new System.Windows.Forms.MenuStrip();
-            this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BuildDate = new System.Windows.Forms.Label();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProcName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Crashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,6 +40,11 @@
             this.BtnVisible = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEnabled = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BtnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.appBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.OptionsPane = new System.Windows.Forms.MenuStrip();
+            this.NewAppButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.BuildDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.AppsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appBindingSource)).BeginInit();
             this.OptionsPane.SuspendLayout();
@@ -67,53 +67,14 @@
             this.BtnVisible,
             this.BtnEnabled,
             this.BtnEdit});
-            this.AppsTable.Location = new System.Drawing.Point(18, 42);
-            this.AppsTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.AppsTable.Location = new System.Drawing.Point(12, 27);
             this.AppsTable.Name = "AppsTable";
             this.AppsTable.ReadOnly = true;
             this.AppsTable.RowHeadersVisible = false;
-            this.AppsTable.Size = new System.Drawing.Size(1000, 363);
+            this.AppsTable.Size = new System.Drawing.Size(667, 236);
             this.AppsTable.TabIndex = 0;
             this.AppsTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridClick);
             this.AppsTable.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataCellPaint);
-            // 
-            // OptionsPane
-            // 
-            this.OptionsPane.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.OptionsPane.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.OptionsPane.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NewAppButton,
-            this.gitHubToolStripMenuItem});
-            this.OptionsPane.Location = new System.Drawing.Point(0, 0);
-            this.OptionsPane.Name = "OptionsPane";
-            this.OptionsPane.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
-            this.OptionsPane.Size = new System.Drawing.Size(1036, 35);
-            this.OptionsPane.TabIndex = 1;
-            this.OptionsPane.Text = "OptionsPanel";
-            // 
-            // NewAppButton
-            // 
-            this.NewAppButton.Name = "NewAppButton";
-            this.NewAppButton.Size = new System.Drawing.Size(98, 29);
-            this.NewAppButton.Text = "New App";
-            this.NewAppButton.Click += new System.EventHandler(this.NewAppClick);
-            // 
-            // gitHubToolStripMenuItem
-            // 
-            this.gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
-            this.gitHubToolStripMenuItem.Size = new System.Drawing.Size(80, 29);
-            this.gitHubToolStripMenuItem.Text = "GitHub";
-            this.gitHubToolStripMenuItem.Click += new System.EventHandler(this.gitHubToolStripMenuItem_Click);
-            // 
-            // BuildDate
-            // 
-            this.BuildDate.Location = new System.Drawing.Point(416, 405);
-            this.BuildDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.BuildDate.Name = "BuildDate";
-            this.BuildDate.Size = new System.Drawing.Size(600, 17);
-            this.BuildDate.TabIndex = 2;
-            this.BuildDate.Text = "BuildDate";
-            this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ID
             // 
@@ -183,17 +144,53 @@
             this.BtnEdit.ReadOnly = true;
             this.BtnEdit.Width = 64;
             // 
+            // OptionsPane
+            // 
+            this.OptionsPane.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.OptionsPane.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.OptionsPane.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewAppButton,
+            this.gitHubToolStripMenuItem});
+            this.OptionsPane.Location = new System.Drawing.Point(0, 0);
+            this.OptionsPane.Name = "OptionsPane";
+            this.OptionsPane.Size = new System.Drawing.Size(691, 24);
+            this.OptionsPane.TabIndex = 1;
+            this.OptionsPane.Text = "OptionsPanel";
+            // 
+            // NewAppButton
+            // 
+            this.NewAppButton.Name = "NewAppButton";
+            this.NewAppButton.Size = new System.Drawing.Size(68, 20);
+            this.NewAppButton.Text = "New App";
+            this.NewAppButton.Click += new System.EventHandler(this.NewAppClick);
+            // 
+            // gitHubToolStripMenuItem
+            // 
+            this.gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
+            this.gitHubToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.gitHubToolStripMenuItem.Text = "GitHub";
+            this.gitHubToolStripMenuItem.Click += new System.EventHandler(this.gitHubToolStripMenuItem_Click);
+            // 
+            // BuildDate
+            // 
+            this.BuildDate.Location = new System.Drawing.Point(283, 263);
+            this.BuildDate.Margin = new System.Windows.Forms.Padding(0);
+            this.BuildDate.Name = "BuildDate";
+            this.BuildDate.Size = new System.Drawing.Size(400, 11);
+            this.BuildDate.TabIndex = 2;
+            this.BuildDate.Text = "BuildDate";
+            this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // Interface
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1036, 423);
+            this.ClientSize = new System.Drawing.Size(691, 275);
             this.Controls.Add(this.BuildDate);
             this.Controls.Add(this.AppsTable);
             this.Controls.Add(this.OptionsPane);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Interface";
             this.Text = "Neustart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
