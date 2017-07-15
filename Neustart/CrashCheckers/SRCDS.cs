@@ -73,6 +73,8 @@ namespace Neustart.CrashCheckers
                         QueryFailures++;
                     else
                         QueryFailures = 0;
+
+                    client.Dispose();
                 }
                 catch (Exception e)
                 {
