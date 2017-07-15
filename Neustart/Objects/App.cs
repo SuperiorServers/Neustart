@@ -50,7 +50,7 @@ namespace Neustart
         public int PID { get; set; } = -1;
         [JsonProperty]
         public int HWND { get; set; } = -1;
-        private IntPtr hwnd;
+        public IntPtr hwnd;
         [JsonProperty]
         public DateTime StartTime { get; set; }
         [JsonProperty]
@@ -66,6 +66,8 @@ namespace Neustart
         private Thread RestartThread;
 
         public bool IsRestarting = false;
+
+        private CrashChecker crashChecker;
 
         public void Init()
         {
@@ -128,9 +130,11 @@ namespace Neustart
 
                 IsRestarting = false;
 
+                crashChecker = CrashChecker.CreateNew(this);
+
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 if (Enabled)
                     MessageBox.Show("An error occurred while starting " + ID + ". It has been disabled.", "Neustart");
@@ -138,6 +142,8 @@ namespace Neustart
                 Enabled = false;
                 IsRestarting = false;
                 DataRow.Cells[6].Value = "Start";
+
+                LogError("Couldn't start app: " + e.Message);
 
                 return false;
             }
@@ -151,12 +157,18 @@ namespace Neustart
                 {
                     IsRestarting = true;
 
+                    if (!IsClosed())
+                        Process.Kill();
+
+                    Process = null;
+                    crashChecker.StopWatching();
+
                     AddCrash();
                     Program.SaveAppData();
 
                     Thread.Sleep(2000); // Delay a restart, in the past there have been issues with sockets not being freed if we don't wait.
 
-                    if (Enabled && (IsClosed() || IsCrashed()))
+                    if (Enabled)
                         Start();
                 }
 
@@ -168,6 +180,9 @@ namespace Neustart
         {
             if (RestartThread != null)
                 RestartThread.Abort();
+
+            if (crashChecker != null)
+                crashChecker.StopWatching();
         }
 
         public bool IsClosed()
@@ -175,15 +190,10 @@ namespace Neustart
 
         public bool IsCrashed()
         {
-            if (Process == null)
+            if (Process == null || crashChecker == null)
                 return false;
 
-            if (Process.Responding)
-                FrozenInterval = 0;
-            else
-                FrozenInterval++;
-
-            return FrozenInterval >= 10;
+            return crashChecker.IsCrashed();
         }
 
         public void Stop()
@@ -319,6 +329,11 @@ namespace Neustart
         {
             Crashes++;
             DataRow.Cells[2].Value = Crashes;
+        }
+
+        public void LogError(string message)
+        {
+            Util.LogError("[" + ID + "] " + message);
         }
     }
 }

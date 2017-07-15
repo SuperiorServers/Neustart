@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashChecker.cs" />
+    <Compile Include="CrashCheckers\SRCDS.cs" />
     <Compile Include="Forms\Details.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\Details.resx">
