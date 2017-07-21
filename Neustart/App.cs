@@ -111,18 +111,16 @@ namespace Neustart
 
         public void Stop()
         {
+            if (m_Config.Enabled)
+                m_Config.Enabled = false;
+
             if (m_Process != null && !m_Process.HasExited)
-            {
-                if (m_Config.Enabled)
-                    m_Config.Enabled = false;
-
                 m_Process.Kill();
-                m_Process = null;
+            m_Process = null;
 
-                m_Config.Crashes = 0;
+            m_Config.Crashes = 0;
 
-                OnStopped?.Invoke(this, null);
-            }
+            OnStopped?.Invoke(this, null);
         }
 
         private void HandleCrash()

@@ -53,6 +53,8 @@ namespace Neustart.Forms
             AppGrid.CellMouseLeave += OnCellMouseLeave;
             AppGrid.CellPainting += OnCellPaint;
 
+            Resize += OnResized;
+
             OnInterfaceReady?.Invoke(this, null);
         }
 
@@ -289,6 +291,25 @@ namespace Neustart.Forms
 
             BuildDate.Text = "Please wait..";
             Core.TriggerUpdate();
+        }
+
+        private void OnResized(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                TaskTrayIcon.Visible = true;
+                TaskTrayIcon.ShowBalloonTip(5000);
+                ShowInTaskbar = false;
+            }
+        }
+
+        private void TaskTrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowInTaskbar = true;
+            WindowState = FormWindowState.Normal;
+            Focus();
+            BringToFront();
+            TaskTrayIcon.Visible = false;
         }
     }
 }

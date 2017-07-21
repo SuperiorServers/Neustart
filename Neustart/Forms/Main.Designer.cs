@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -46,6 +47,7 @@
             this.BuildDate = new System.Windows.Forms.Label();
             this.BtnNewApp = new System.Windows.Forms.Button();
             this.BtnGithub = new System.Windows.Forms.Button();
+            this.TaskTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.AppGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,7 +91,8 @@
             this.AppGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.AppGrid.EnableHeadersVisualStyles = false;
             this.AppGrid.GridColor = System.Drawing.Color.Black;
-            this.AppGrid.Location = new System.Drawing.Point(23, 63);
+            this.AppGrid.Location = new System.Drawing.Point(31, 78);
+            this.AppGrid.Margin = new System.Windows.Forms.Padding(4);
             this.AppGrid.Name = "AppGrid";
             this.AppGrid.ReadOnly = true;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -102,7 +105,7 @@
             this.AppGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.AppGrid.RowHeadersVisible = false;
             this.AppGrid.RowTemplate.Height = 30;
-            this.AppGrid.Size = new System.Drawing.Size(692, 298);
+            this.AppGrid.Size = new System.Drawing.Size(923, 367);
             this.AppGrid.TabIndex = 0;
             // 
             // ID
@@ -189,10 +192,10 @@
             this.BuildDate.Cursor = System.Windows.Forms.Cursors.Default;
             this.BuildDate.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.BuildDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
-            this.BuildDate.Location = new System.Drawing.Point(315, 364);
+            this.BuildDate.Location = new System.Drawing.Point(420, 448);
             this.BuildDate.Margin = new System.Windows.Forms.Padding(0);
             this.BuildDate.Name = "BuildDate";
-            this.BuildDate.Size = new System.Drawing.Size(400, 15);
+            this.BuildDate.Size = new System.Drawing.Size(533, 18);
             this.BuildDate.TabIndex = 3;
             this.BuildDate.Text = "BuildDate";
             this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -205,9 +208,10 @@
             this.BtnNewApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnNewApp.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.BtnNewApp.ForeColor = System.Drawing.Color.White;
-            this.BtnNewApp.Location = new System.Drawing.Point(123, 22);
+            this.BtnNewApp.Location = new System.Drawing.Point(164, 27);
+            this.BtnNewApp.Margin = new System.Windows.Forms.Padding(4);
             this.BtnNewApp.Name = "BtnNewApp";
-            this.BtnNewApp.Size = new System.Drawing.Size(75, 34);
+            this.BtnNewApp.Size = new System.Drawing.Size(100, 42);
             this.BtnNewApp.TabIndex = 4;
             this.BtnNewApp.Text = "New App";
             this.BtnNewApp.UseVisualStyleBackColor = false;
@@ -220,26 +224,38 @@
             this.BtnGithub.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnGithub.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.BtnGithub.ForeColor = System.Drawing.Color.White;
-            this.BtnGithub.Location = new System.Drawing.Point(204, 22);
+            this.BtnGithub.Location = new System.Drawing.Point(272, 27);
+            this.BtnGithub.Margin = new System.Windows.Forms.Padding(4);
             this.BtnGithub.Name = "BtnGithub";
-            this.BtnGithub.Size = new System.Drawing.Size(75, 34);
+            this.BtnGithub.Size = new System.Drawing.Size(100, 42);
             this.BtnGithub.TabIndex = 5;
             this.BtnGithub.Text = "GitHub";
             this.BtnGithub.UseVisualStyleBackColor = false;
             this.BtnGithub.Click += new System.EventHandler(this.GitHubClick);
             // 
+            // TaskTrayIcon
+            // 
+            this.TaskTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.TaskTrayIcon.BalloonTipText = "We\'re still running and restarting your apps in the background!";
+            this.TaskTrayIcon.BalloonTipTitle = "Neustart";
+            this.TaskTrayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("TaskTrayIcon.Icon")));
+            this.TaskTrayIcon.Text = "Neustart";
+            this.TaskTrayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TaskTrayIcon_MouseDoubleClick);
+            // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(738, 384);
+            this.ClientSize = new System.Drawing.Size(984, 473);
             this.Controls.Add(this.BtnGithub);
             this.Controls.Add(this.BtnNewApp);
             this.Controls.Add(this.BuildDate);
             this.Controls.Add(this.AppGrid);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Main";
+            this.Padding = new System.Windows.Forms.Padding(27, 74, 27, 25);
             this.Resizable = false;
             this.ShowIcon = false;
             this.Style = MetroFramework.MetroColorStyle.Orange;
@@ -267,5 +283,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Memory;
         private System.Windows.Forms.Button BtnNewApp;
         private System.Windows.Forms.Button BtnGithub;
+        private System.Windows.Forms.NotifyIcon TaskTrayIcon;
     }
 }
