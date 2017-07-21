@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Neustart.Forms
@@ -188,7 +189,12 @@ namespace Neustart.Forms
                     if (res == DialogResult.Yes)
                     {
                         curApp.Stop();
-                        curApp.Start();
+
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(1000);
+                            curApp.Start();
+                        });
                     }
                 }
             }
