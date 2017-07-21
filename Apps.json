@@ -1,0 +1,15 @@
+[
+  {
+    "ID": "TWH-Dev",
+    "Enabled": true,
+    "Hidden": true,
+    "Path": "E:\\Development\\SERVERS\\twh\\srcds.exe",
+    "Args": "-console -game garrysmod +gamemode therewashope +map rp_apocalypse -maxplayers 20",
+    "Affinities": 12,
+    "Priority": 2,
+    "PID": 11296,
+    "HWND": 4395750,
+    "StartTime": "2017-07-13T23:16:18.523732-05:00",
+    "Crashes": 1
+  }
+]
