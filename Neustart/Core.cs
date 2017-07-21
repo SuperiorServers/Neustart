@@ -133,9 +133,6 @@ namespace Neustart
                     if (Int32.Parse(splitVers[i]) < Int32.Parse(splitCurVers[i]))
                     {
                         Debug.Log("Neustart is currently up to date");
-
-                        m_UpdateZipPath = jsonData.SelectToken("assets[0].browser_download_url").ToString();
-                        UpdateAvailable = true;
                         return;
                     }
                 }
