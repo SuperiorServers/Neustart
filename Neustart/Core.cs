@@ -195,12 +195,12 @@ namespace Neustart
 
                     if (File.Exists("update_" + m_UpdateVersion + "/Update.exe"))
                         File.Move("update_" + m_UpdateVersion + "/Update.exe", "Update.exe");
-
-                    File.Delete("neustart_update_package.zip");
-
-                    Process.Start("Update.exe", m_UpdateVersion);
-                    Environment.Exit(0);
                 }
+
+                File.Delete("neustart_update_package.zip");
+
+                Process.Start("Update.exe", m_UpdateVersion);
+                Environment.Exit(0);
             } ;
         }
     }
