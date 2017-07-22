@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.AppGrid = new System.Windows.Forms.DataGridView();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,14 +61,14 @@
             this.AppGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.AppGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.AppGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AppGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AppGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.AppGrid.ColumnHeadersHeight = 33;
             this.AppGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.AppGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -81,31 +81,30 @@
             this.BtnVisible,
             this.BtnEnabled,
             this.BtnEdit});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AppGrid.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AppGrid.DefaultCellStyle = dataGridViewCellStyle7;
             this.AppGrid.EnableHeadersVisualStyles = false;
             this.AppGrid.GridColor = System.Drawing.Color.Black;
-            this.AppGrid.Location = new System.Drawing.Point(31, 78);
-            this.AppGrid.Margin = new System.Windows.Forms.Padding(4);
+            this.AppGrid.Location = new System.Drawing.Point(23, 63);
             this.AppGrid.Name = "AppGrid";
             this.AppGrid.ReadOnly = true;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AppGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AppGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.AppGrid.RowHeadersVisible = false;
             this.AppGrid.RowTemplate.Height = 30;
-            this.AppGrid.Size = new System.Drawing.Size(923, 367);
+            this.AppGrid.Size = new System.Drawing.Size(692, 298);
             this.AppGrid.TabIndex = 0;
             // 
             // ID
@@ -118,8 +117,8 @@
             // 
             // ProcName
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.ProcName.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.ProcName.DefaultCellStyle = dataGridViewCellStyle6;
             this.ProcName.HeaderText = "Name";
             this.ProcName.Name = "ProcName";
             this.ProcName.ReadOnly = true;
@@ -192,10 +191,10 @@
             this.BuildDate.Cursor = System.Windows.Forms.Cursors.Default;
             this.BuildDate.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.BuildDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
-            this.BuildDate.Location = new System.Drawing.Point(420, 448);
+            this.BuildDate.Location = new System.Drawing.Point(315, 364);
             this.BuildDate.Margin = new System.Windows.Forms.Padding(0);
             this.BuildDate.Name = "BuildDate";
-            this.BuildDate.Size = new System.Drawing.Size(533, 18);
+            this.BuildDate.Size = new System.Drawing.Size(400, 15);
             this.BuildDate.TabIndex = 3;
             this.BuildDate.Text = "BuildDate";
             this.BuildDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -208,10 +207,9 @@
             this.BtnNewApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnNewApp.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.BtnNewApp.ForeColor = System.Drawing.Color.White;
-            this.BtnNewApp.Location = new System.Drawing.Point(164, 27);
-            this.BtnNewApp.Margin = new System.Windows.Forms.Padding(4);
+            this.BtnNewApp.Location = new System.Drawing.Point(123, 22);
             this.BtnNewApp.Name = "BtnNewApp";
-            this.BtnNewApp.Size = new System.Drawing.Size(100, 42);
+            this.BtnNewApp.Size = new System.Drawing.Size(75, 34);
             this.BtnNewApp.TabIndex = 4;
             this.BtnNewApp.Text = "New App";
             this.BtnNewApp.UseVisualStyleBackColor = false;
@@ -224,10 +222,9 @@
             this.BtnGithub.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnGithub.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.BtnGithub.ForeColor = System.Drawing.Color.White;
-            this.BtnGithub.Location = new System.Drawing.Point(272, 27);
-            this.BtnGithub.Margin = new System.Windows.Forms.Padding(4);
+            this.BtnGithub.Location = new System.Drawing.Point(204, 22);
             this.BtnGithub.Name = "BtnGithub";
-            this.BtnGithub.Size = new System.Drawing.Size(100, 42);
+            this.BtnGithub.Size = new System.Drawing.Size(75, 34);
             this.BtnGithub.TabIndex = 5;
             this.BtnGithub.Text = "GitHub";
             this.BtnGithub.UseVisualStyleBackColor = false;
@@ -244,19 +241,18 @@
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 473);
+            this.ClientSize = new System.Drawing.Size(738, 384);
             this.Controls.Add(this.BtnGithub);
             this.Controls.Add(this.BtnNewApp);
             this.Controls.Add(this.BuildDate);
             this.Controls.Add(this.AppGrid);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Padding = new System.Windows.Forms.Padding(27, 74, 27, 25);
             this.Resizable = false;
+            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.None;
             this.ShowIcon = false;
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "Neustart";

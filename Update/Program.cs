@@ -14,20 +14,21 @@ namespace Update
         {
             System.Threading.Thread.Sleep(1000);
 
-            if (Directory.Exists("update"))
+            try
             {
-                foreach(string path in Directory.GetFiles("update"))
+                string updateVersion = args[0];
+                if (Directory.Exists("update_" + updateVersion))
                 {
-                    try
+                    foreach (string path in Directory.GetFiles("update_" + updateVersion))
                     {
                         FileInfo inf = new FileInfo(path);
                         File.Delete(inf.Name);
                         inf.MoveTo(inf.Name);
-                    } catch(Exception) { }
-                }
+                    }
 
-                Directory.Delete("update", true);
-            }
+                    Directory.Delete("update_" + updateVersion, true);
+                }
+            } catch(Exception) { }
 
             Process.Start("Neustart.exe");
         }

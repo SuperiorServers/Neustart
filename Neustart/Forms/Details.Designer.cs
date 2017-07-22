@@ -140,7 +140,7 @@ namespace Neustart.Forms
             // AffinityContainer
             // 
             this.AffinityContainer.AutoScroll = true;
-            this.AffinityContainer.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.AffinityContainer.BackColor = System.Drawing.Color.White;
             this.AffinityContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.AffinityContainer.ForeColor = System.Drawing.SystemColors.ControlText;
             this.AffinityContainer.Location = new System.Drawing.Point(188, 98);
@@ -276,6 +276,7 @@ namespace Neustart.Forms
             this.MaximizeBox = false;
             this.Name = "Details";
             this.Resizable = false;
+            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.None;
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "App Details";
             this.ResumeLayout(false);

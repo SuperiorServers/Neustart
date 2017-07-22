@@ -242,24 +242,27 @@ namespace Neustart.Forms
         {
             while (Get() != null)
             {
-                if (Core.UpdateAvailable)
-                    BuildDate.Invoke((MethodInvoker)delegate { BuildDate.Text = Core.Version + " (Update available, click here!)"; });
-
-                foreach (var entry in m_AppRowDictionary)
+                if (Visible)
                 {
-                    App app = entry.Key;
-                    DataGridViewRow row = entry.Value.row;
-                    AppRowTemplate template = entry.Value.template;
+                    if (Core.UpdateAvailable)
+                        BuildDate.Invoke((MethodInvoker)delegate { BuildDate.Text = Core.Version + " (Update available, click here!)"; });
 
-                    // We wrap this in a try just because it's not exactly thread safe to the app's processes.
-                    // If an exception is thrown here we can pretty safely assume the process ended one way or another - we'll just use what was cached.
-                    try { app.RefreshStatuses(ref template); } catch (Exception) { }
+                    foreach (var entry in m_AppRowDictionary)
+                    {
+                        App app = entry.Key;
+                        DataGridViewRow row = entry.Value.row;
+                        AppRowTemplate template = entry.Value.template;
 
-                    row.Cells[1].Value = template.Title;
-                    row.Cells[2].Value = template.Crashes;
-                    row.Cells[3].Value = template.Uptime;
-                    row.Cells[4].Value = template.CPU;
-                    row.Cells[5].Value = template.Memory;
+                        // We wrap this in a try just because it's not exactly thread safe to the app's processes.
+                        // If an exception is thrown here we can pretty safely assume the process ended one way or another - we'll just use what was cached.
+                        try { app.RefreshStatuses(ref template); } catch (Exception) { }
+
+                        row.Cells[1].Value = template.Title;
+                        row.Cells[2].Value = template.Crashes;
+                        row.Cells[3].Value = template.Uptime;
+                        row.Cells[4].Value = template.CPU;
+                        row.Cells[5].Value = template.Memory;
+                    }
                 }
 
                 Thread.Sleep(750);

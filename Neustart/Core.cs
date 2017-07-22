@@ -40,6 +40,7 @@ namespace Neustart
 
         public static bool UpdateAvailable = false;
         private static string m_UpdateZipPath;
+        private static string m_UpdateVersion;
 
         private static bool AlreadyRunning()
         {
@@ -60,6 +61,9 @@ namespace Neustart
                 return 0;
 
             }
+
+            CleanupPostUpdate();
+
             if (args.Contains<string>("-debug"))
                 Debug.Start();
 
@@ -88,6 +92,15 @@ namespace Neustart
             Application.Run(mainWindow);
 
             return 0;
+        }
+
+        private static void CleanupPostUpdate()
+        {
+            try
+            {
+                File.Delete("Update.exe");
+                File.Delete("Update.exe.config");
+            } catch(Exception) { }
         }
 
         public static void ForceQuit()
@@ -123,9 +136,17 @@ namespace Neustart
                 dynamic jsonRet = JsonConvert.DeserializeObject(respData);
                 var jsonData = (JObject)jsonRet;
 
-                Debug.Log("Latest release: " + jsonData.SelectToken("id"));
+                string releaseVers = jsonData.SelectToken("tag_name").ToString().Substring(1);
 
-                string[] splitVers = jsonData.SelectToken("tag_name").ToString().Substring(1).Split('.');
+                Debug.Log("Latest release: " + releaseVers);
+
+                if (releaseVers == Version)
+                {
+                    Debug.Log("Neustart is currently up to date");
+                    return;
+                }
+
+                string[] splitVers = releaseVers.Split('.');
                 string[] splitCurVers = Version.Split('.');
 
                 for (int i = 0; i < splitVers.Length; i++)
@@ -140,6 +161,7 @@ namespace Neustart
                 Debug.Log("Update is available");
 
                 m_UpdateZipPath = jsonData.SelectToken("assets[0].browser_download_url").ToString();
+                m_UpdateVersion = releaseVers;
                 UpdateAvailable = true;
             }
             catch (Exception ex)
@@ -162,21 +184,23 @@ namespace Neustart
 
             WebClient wc = new WebClient();
             wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-            wc.DownloadFileAsync(new Uri(m_UpdateZipPath), "update.zip");
+            wc.DownloadFileAsync(new Uri(m_UpdateZipPath), "neustart_update_package.zip");
             wc.DownloadFileCompleted += (o, e) => {
                 Debug.Log("File downloaded. Decompressing.");
 
-                using (ZipArchive archive = ZipFile.OpenRead("update.zip"))
+                using (ZipArchive archive = ZipFile.OpenRead("neustart_update_package.zip"))
                 {
-                    Directory.CreateDirectory("update");
-                    foreach (ZipArchiveEntry entry in archive.Entries)
-                        entry.ExtractToFile(Path.Combine("update", entry.FullName));
+                    Directory.CreateDirectory("update_" + m_UpdateVersion);
+                    archive.ExtractToDirectory("update_" + m_UpdateVersion);
+
+                    if (File.Exists("update_" + m_UpdateVersion + "/Update.exe"))
+                        File.Move("update_" + m_UpdateVersion + "/Update.exe", "Update.exe");
+
+                    File.Delete("neustart_update_package.zip");
+
+                    Process.Start("Update.exe", m_UpdateVersion);
+                    Environment.Exit(0);
                 }
-
-                File.Delete("update.zip");
-
-                Process.Start("Update.exe");
-                Environment.Exit(0);
             } ;
         }
     }
