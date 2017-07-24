@@ -46,6 +46,8 @@ namespace Neustart.Forms
         {
             App.OnAppInitialized += OnAppInitialized;
 
+            AppGrid.SizeChanged += OnGridSizeChanged;
+
             AppGrid.CellContentClick += OnCellContentClicked;
             AppGrid.CellMouseDown += OnCellMouseDown;
             AppGrid.CellMouseUp += OnCellMouseUp;
@@ -56,6 +58,12 @@ namespace Neustart.Forms
             Resize += OnResized;
 
             OnInterfaceReady?.Invoke(this, null);
+        }
+
+        private void OnGridSizeChanged(object sender, EventArgs e)
+        {
+            BuildDate.Location = new Point(BuildDate.Location.X, AppGrid.Location.Y + AppGrid.Height + 3);
+            Height = AppGrid.Location.Y + AppGrid.Height + 23;
         }
 
         private void Main_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
