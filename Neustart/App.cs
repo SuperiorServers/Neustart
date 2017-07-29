@@ -153,7 +153,7 @@ namespace Neustart
                 Forms.Main.Get().BringToFront();
         }
 
-        public void RefreshStatuses(ref Forms.Main.AppRowTemplate template)
+        public void RefreshStatuses(ref Forms.Main.AppRowTemplate template, System.Management.ManagementObjectCollection wmiRes)
         {
             if (Running)
             {
@@ -180,27 +180,23 @@ namespace Neustart
                     double seconds = Math.Floor(total - (hours * 3600) - (minutes * 60));
                     template.Uptime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
 
+                    template.CPU = "N/A";
                     try
                     {
-                        System.Management.ManagementObjectSearcher searcher =
-                            new System.Management.ManagementObjectSearcher("root\\CIMV2",
-                            "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process WHERE IDProcess=" + m_Process.Id);
-                        System.Management.ManagementObjectCollection res = searcher.Get();
-
-                        if (res.Count < 1)
-                            throw new Exception("WMI query returned no results (couldn't find this process?");
-
-                        foreach(System.Management.ManagementObject obj in res)
-                        {
-                            string procPercent = string.Format("{0}", obj["PercentProcessorTime"]);                            
-                            template.CPU = ((double)Int32.Parse(procPercent) / Environment.ProcessorCount).ToString() + "%";
-                            break;
-                        }
+                        if (wmiRes != null)
+                            foreach(System.Management.ManagementObject obj in wmiRes)
+                            {
+                                if (Int32.Parse(obj["IDProcess"].ToString()) == m_Process.Id)
+                                {
+                                    string procPercent = string.Format("{0}", obj["PercentProcessorTime"]);
+                                    template.CPU = ((double)Int32.Parse(procPercent) / Environment.ProcessorCount).ToString() + "%";
+                                    break;
+                                }
+                            }
                     }
                     catch (Exception e)
                     {
-                        Debug.Error("An error occurred while querying for WMI data: " + e.Message);
-                        template.CPU = "0%";
+                        Debug.Error("An error occurred while looping WMI data: " + e.Message);
                     }
 
                     template.Memory = (m_Process.WorkingSet64 / 1048576) + " MB";

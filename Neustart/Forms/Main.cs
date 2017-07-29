@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
@@ -29,7 +30,7 @@ namespace Neustart.Forms
             public AppRowTemplate template;
             public DataGridViewRow row;
         }
-        private Dictionary<App, AppRowDict> m_AppRowDictionary = new Dictionary<App, AppRowDict>();
+        private ConcurrentDictionary<App, AppRowDict> m_AppRowDictionary = new ConcurrentDictionary<App, AppRowDict>();
 
         public Main()
         {
@@ -39,7 +40,11 @@ namespace Neustart.Forms
 
             this.BuildDate.Text = Core.Version;
 
-            new Thread(UpdateAppStatuses).Start();
+            AppContainer.OnLoadCompleted += (o, e) =>
+            {
+                Debug.Log("App load has completed, starting to poll statuses now.");
+                new Thread(UpdateAppStatuses).Start();
+            };
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -87,7 +92,7 @@ namespace Neustart.Forms
             AppRowDict dict = m_AppRowDictionary[app];
 
             AppGrid.Rows.Remove(dict.row);
-            m_AppRowDictionary.Remove(app);
+            m_AppRowDictionary.TryRemove(app, out _);
 
             Debug.Log("Removed AppGrid row for " + app.Config.ID);
         }
@@ -252,8 +257,23 @@ namespace Neustart.Forms
             {
                 if (Visible)
                 {
+                    Debug.Log("Updating app statuses");
+
                     if (Core.UpdateAvailable)
                         BuildDate.Invoke((MethodInvoker)delegate { BuildDate.Text = Core.Version + " (Update available, click here!)"; });
+
+                    System.Management.ManagementObjectCollection wmiRes = null;
+
+                    try
+                    {
+                        System.Management.ManagementObjectSearcher wmiSearcher =
+                                new System.Management.ManagementObjectSearcher("root\\CIMV2",
+                                "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process");
+                        wmiRes = wmiSearcher.Get();
+                    } catch (Exception e)
+                    {
+                        Debug.Error("Couldn't query WMI: " + e.Message);
+                    }
 
                     foreach (var entry in m_AppRowDictionary)
                     {
@@ -263,7 +283,7 @@ namespace Neustart.Forms
 
                         // We wrap this in a try just because it's not exactly thread safe to the app's processes.
                         // If an exception is thrown here we can pretty safely assume the process ended one way or another - we'll just use what was cached.
-                        try { app.RefreshStatuses(ref template); } catch (Exception) { }
+                        try { app.RefreshStatuses(ref template, wmiRes); } catch (Exception) { }
 
                         row.Cells[1].Value = template.Title;
                         row.Cells[2].Value = template.Crashes;
@@ -310,12 +330,14 @@ namespace Neustart.Forms
             {
                 TaskTrayIcon.Visible = true;
                 TaskTrayIcon.ShowBalloonTip(5000);
+                Visible = false;
                 ShowInTaskbar = false;
             }
         }
 
         private void TaskTrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            Visible = true;
             ShowInTaskbar = true;
             WindowState = FormWindowState.Normal;
             Focus();

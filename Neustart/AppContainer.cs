@@ -12,6 +12,8 @@ namespace Neustart
 {
     public class AppContainer
     {
+        public static event EventHandler OnLoadCompleted;
+
         private List<AppConfig> m_ConfigContainer;
         private List<App> m_AppContainer = new List<App>();
         private System.Timers.Timer m_SaveTimer;
@@ -41,6 +43,7 @@ namespace Neustart
 
                 AppConfig.OnConfiguationChanged += SaveConfig;
 
+                OnLoadCompleted?.Invoke(this, null);
             } catch(Exception e)
             {
                 Debug.Error("Couldn't load Neustart config: " + e.Message);
@@ -72,8 +75,12 @@ namespace Neustart
             if (sender != this && !m_ConfigContainer.Contains(sender))
                 return;
 
-            if (m_SaveTimer != null && m_SaveTimer.Enabled)
+            if (m_SaveTimer != null && m_SaveTimer.Enabled) // Just restart the timer we have instead of creating a new one
+            {
                 m_SaveTimer.Stop();
+                m_SaveTimer.Start();
+                return;
+            }
 
             m_SaveTimer = new System.Timers.Timer(250);
             m_SaveTimer.AutoReset = false;
@@ -89,7 +96,7 @@ namespace Neustart
             m_SaveTimer.Start();
         }
 
-        public async void SetupApp(AppConfig appConfig, bool isNew = false)
+        public void SetupApp(AppConfig appConfig, bool isNew = false)
         {
             if (isNew)
             {
