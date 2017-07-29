@@ -55,11 +55,12 @@ namespace Neustart
         [STAThread]
         static int Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
+
             if (AlreadyRunning())
             {
                 MessageBox.Show(null, "This copy of Neustart is already running. Look in your system tray!", "Neustart");
                 return 0;
-
             }
 
             CleanupPostUpdate();
@@ -92,6 +93,15 @@ namespace Neustart
             Application.Run(mainWindow);
 
             return 0;
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs ea)
+        {
+            Exception e = (Exception)ea.ExceptionObject;
+            if (ea.IsTerminating)
+                MessageBox.Show(null,"Fatal error: " + e.Message, "Neustart");
+            else
+                MessageBox.Show("Unhandled error: " + e.Message, "Neustart");
         }
 
         private static void CleanupPostUpdate()
