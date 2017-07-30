@@ -42,6 +42,7 @@ namespace Neustart
                     SetupApp(appConfig);
 
                 AppConfig.OnConfiguationChanged += SaveConfig;
+                SaveConfig(this, null);
 
                 OnLoadCompleted?.Invoke(this, null);
             } catch(Exception e)
