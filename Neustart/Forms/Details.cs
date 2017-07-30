@@ -1,43 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using MetroFramework.Controls;
 
 namespace Neustart.Forms
 {
     public partial class Details : MetroFramework.Forms.MetroForm
     {
         private App curApp;
-        private List<CheckBox> Affinities;
+        private List<MetroCheckBox> Affinities;
         private int newAffinity;
-        private List<RadioButton> Priorities;
+        private List<MetroRadioButton> Priorities;
 
         public Details()
         {
             InitializeComponent();
             this.MaximizeBox = false;
 
-            //AffinityContainer.Location = new System.Drawing.Point(174, 43);
-
-            Affinities = new List<CheckBox>();
+            Affinities = new List<MetroCheckBox>();
             List<Label> lbls = new List<Label>();
 
             int x = 3;
             int y = 3;
             for (int i=1; i <= Environment.ProcessorCount; i++)
             {
-                CheckBox aff = new CheckBox();
+                MetroCheckBox aff = new MetroCheckBox();
                 aff.Parent = AffinityContainer;
-                aff.Location = new System.Drawing.Point(x, y);
-                aff.Size = new System.Drawing.Size(16, 16);
+                aff.Location = new Point(x, y);
+                aff.Size = new Size(16, 16);
                 aff.Checked = true;
+                aff.Style = MetroFramework.MetroColorStyle.Orange;
+                aff.Theme = MetroFramework.MetroThemeStyle.Dark;
 
-                Label lbl = new Label();
+                MetroLabel lbl = new MetroLabel();
                 lbl.Parent = AffinityContainer;
-                lbl.Location = new System.Drawing.Point(x + 13, y + 1);
-                lbl.Size = new System.Drawing.Size(20, 16);
+                lbl.Location = new Point(x + 13, y - 2);
+                lbl.Size = new Size(22, 16);
                 lbl.Text = i.ToString();
+                lbl.Style = MetroFramework.MetroColorStyle.Orange;
+                lbl.Theme = MetroFramework.MetroThemeStyle.Dark;
 
                 Affinities.Add(aff);
                 lbls.Add(lbl);
@@ -56,7 +59,7 @@ namespace Neustart.Forms
             if (y != 81)
             {
                 int off = 1;
-                foreach (CheckBox aff in Affinities)
+                foreach (MetroCheckBox aff in Affinities)
                 {
                     if (aff.Left != 3)
                         { aff.Left += (6 * off); off++; }
@@ -75,7 +78,7 @@ namespace Neustart.Forms
 
             CalculateAffinity();
 
-            Priorities = new List<RadioButton>
+            Priorities = new List<MetroRadioButton>
             {
                 RadioLow,
                 RadioBelow,
@@ -99,7 +102,7 @@ namespace Neustart.Forms
             DeleteButton.ForeColor = SystemColors.ControlLightLight;
 
             int i = 0;
-            foreach (CheckBox aff in Affinities)
+            foreach (MetroCheckBox aff in Affinities)
             {
                 aff.Checked = (app.Config.Affinities & (1 << i)) == (1 << i);
                 i++;
@@ -158,7 +161,7 @@ namespace Neustart.Forms
 
                 newConfig.Enabled = false;
 
-                this.Close();
+                Close();
 
                 Core.GetContainer().SetupApp(newConfig, true);
             } else { // Editing app
@@ -170,18 +173,16 @@ namespace Neustart.Forms
                 curApp.Config.Affinities = newAffinity;
 
                 for (int i = 0; i < Priorities.Count; i++)
-                {
                     if (Priorities[i].Checked)
                     {
                         curApp.Config.Priority = i;
                         break;
                     }
-                }
 
-                this.Close();
+                Close();
 
                 if (curApp.Config.ID != prevID)
-                    Forms.Main.Get().AppRenamed(curApp);
+                    Main.Get().AppRenamed(curApp);
 
                 if (curApp.Config.Enabled)
                 {
@@ -215,7 +216,7 @@ namespace Neustart.Forms
             int affinity = 0;
             int i = 0;
             List<string> txt = new List<string>();
-            foreach (CheckBox aff in Affinities)
+            foreach (MetroCheckBox aff in Affinities)
             {
                 if (aff.Checked)
                 {
