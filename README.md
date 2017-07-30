@@ -7,7 +7,7 @@ From the main interface you'll be presented with simple controls to start, stop,
 **Note:** Neustart will remember your preference when you start or stop an application. So, stopping a program will mean that next time you open Neustart, it won't automatically start. That also means that a program that is started **will** automatically start next time Neustart is opened.
 
 ### Adding applications
-![New App](https://yasbit.ch/22lE9.png)  
+![New App](https://yasbit.ch/20564.png)  
 Simple and easy to work, adding an application to be restarted is a breeze. Give it an identifier and tell it where and what to do! Optionally choose CPU cores for the application to run on to split your workload.
 
 ### Details
