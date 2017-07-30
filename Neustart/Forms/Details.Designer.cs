@@ -185,7 +185,9 @@ namespace Neustart.Forms
             // 
             // SubmitButton
             // 
-            this.SubmitButton.Location = new System.Drawing.Point(26, 303);
+            this.SubmitButton.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.SubmitButton.FontWeight = MetroFramework.MetroButtonWeight.Regular;
+            this.SubmitButton.Location = new System.Drawing.Point(26, 279);
             this.SubmitButton.Name = "SubmitButton";
             this.SubmitButton.Size = new System.Drawing.Size(157, 30);
             this.SubmitButton.TabIndex = 8;
@@ -196,7 +198,9 @@ namespace Neustart.Forms
             // DeleteButton
             // 
             this.DeleteButton.Enabled = false;
-            this.DeleteButton.Location = new System.Drawing.Point(189, 303);
+            this.DeleteButton.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.DeleteButton.FontWeight = MetroFramework.MetroButtonWeight.Regular;
+            this.DeleteButton.Location = new System.Drawing.Point(189, 279);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(157, 30);
             this.DeleteButton.TabIndex = 8;
@@ -226,6 +230,8 @@ namespace Neustart.Forms
             // 
             // AffinityButton
             // 
+            this.AffinityButton.FontSize = MetroFramework.MetroButtonSize.Medium;
+            this.AffinityButton.FontWeight = MetroFramework.MetroButtonWeight.Light;
             this.AffinityButton.Location = new System.Drawing.Point(188, 78);
             this.AffinityButton.Name = "AffinityButton";
             this.AffinityButton.Size = new System.Drawing.Size(156, 22);
@@ -245,9 +251,9 @@ namespace Neustart.Forms
             // RadioBelow
             // 
             this.RadioBelow.AutoSize = true;
-            this.RadioBelow.Location = new System.Drawing.Point(79, 257);
+            this.RadioBelow.Location = new System.Drawing.Point(75, 257);
             this.RadioBelow.Name = "RadioBelow";
-            this.RadioBelow.Size = new System.Drawing.Size(58, 17);
+            this.RadioBelow.Size = new System.Drawing.Size(55, 15);
             this.RadioBelow.TabIndex = 12;
             this.RadioBelow.Text = "Below";
             this.RadioBelow.UseSelectable = true;
@@ -256,9 +262,9 @@ namespace Neustart.Forms
             // 
             this.RadioNormal.AutoSize = true;
             this.RadioNormal.Checked = true;
-            this.RadioNormal.Location = new System.Drawing.Point(142, 257);
+            this.RadioNormal.Location = new System.Drawing.Point(130, 257);
             this.RadioNormal.Name = "RadioNormal";
-            this.RadioNormal.Size = new System.Drawing.Size(68, 17);
+            this.RadioNormal.Size = new System.Drawing.Size(63, 15);
             this.RadioNormal.TabIndex = 13;
             this.RadioNormal.TabStop = true;
             this.RadioNormal.Text = "Normal";
@@ -267,9 +273,9 @@ namespace Neustart.Forms
             // RadioHigh
             // 
             this.RadioHigh.AutoSize = true;
-            this.RadioHigh.Location = new System.Drawing.Point(283, 257);
+            this.RadioHigh.Location = new System.Drawing.Point(251, 257);
             this.RadioHigh.Name = "RadioHigh";
-            this.RadioHigh.Size = new System.Drawing.Size(51, 17);
+            this.RadioHigh.Size = new System.Drawing.Size(49, 15);
             this.RadioHigh.TabIndex = 14;
             this.RadioHigh.Text = "High";
             this.RadioHigh.UseSelectable = true;
@@ -277,9 +283,9 @@ namespace Neustart.Forms
             // RadioReal
             // 
             this.RadioReal.AutoSize = true;
-            this.RadioReal.Location = new System.Drawing.Point(28, 280);
+            this.RadioReal.Location = new System.Drawing.Point(301, 257);
             this.RadioReal.Name = "RadioReal";
-            this.RadioReal.Size = new System.Drawing.Size(49, 17);
+            this.RadioReal.Size = new System.Drawing.Size(45, 15);
             this.RadioReal.TabIndex = 15;
             this.RadioReal.Text = "Real";
             this.RadioReal.UseSelectable = true;
@@ -289,7 +295,7 @@ namespace Neustart.Forms
             this.RadioLow.AutoSize = true;
             this.RadioLow.Location = new System.Drawing.Point(28, 257);
             this.RadioLow.Name = "RadioLow";
-            this.RadioLow.Size = new System.Drawing.Size(47, 17);
+            this.RadioLow.Size = new System.Drawing.Size(45, 15);
             this.RadioLow.TabIndex = 16;
             this.RadioLow.TabStop = true;
             this.RadioLow.Text = "Low";
@@ -298,9 +304,9 @@ namespace Neustart.Forms
             // RadioAbove
             // 
             this.RadioAbove.AutoSize = true;
-            this.RadioAbove.Location = new System.Drawing.Point(216, 257);
+            this.RadioAbove.Location = new System.Drawing.Point(194, 257);
             this.RadioAbove.Name = "RadioAbove";
-            this.RadioAbove.Size = new System.Drawing.Size(61, 17);
+            this.RadioAbove.Size = new System.Drawing.Size(57, 15);
             this.RadioAbove.TabIndex = 17;
             this.RadioAbove.TabStop = true;
             this.RadioAbove.Text = "Above";
@@ -308,6 +314,8 @@ namespace Neustart.Forms
             // 
             // BrowseButton
             // 
+            this.BrowseButton.FontSize = MetroFramework.MetroButtonSize.Medium;
+            this.BrowseButton.FontWeight = MetroFramework.MetroButtonWeight.Light;
             this.BrowseButton.Location = new System.Drawing.Point(283, 119);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(61, 20);
@@ -331,7 +339,7 @@ namespace Neustart.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(367, 358);
+            this.ClientSize = new System.Drawing.Size(367, 332);
             this.Controls.Add(this.RadioAbove);
             this.Controls.Add(this.RadioLow);
             this.Controls.Add(this.RadioReal);
