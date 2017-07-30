@@ -39,8 +39,11 @@ namespace Neustart
         private IntPtr  m_Hwnd;
         private CrashWatcher m_CrashWatcher;
 
-        public void Start()
+        public void Start(bool fromCrash = false)
         {
+            if (fromCrash && !m_Config.Enabled) // This means the person happened to stop the process between crash and restart
+                return;
+
             try
             {
                 bool didResume = false;
@@ -58,7 +61,9 @@ namespace Neustart
                             didResume = true;
                         }
                     }
-                    catch (Exception) { }
+                    catch (Exception e) {
+                        Debug.Warning(e.Message);
+                    }
                 }
 
                 if (!didResume)
@@ -117,7 +122,9 @@ namespace Neustart
                 m_Process.Kill();
             m_Process = null;
 
+            m_Config.PID = -1;
             m_Config.Crashes = 0;
+            m_Config.StartTime = DateTime.MinValue;
 
             OnStopped?.Invoke(this, null);
         }
@@ -130,7 +137,7 @@ namespace Neustart
             {
                 await Task.Delay(2000);
 
-                Start();
+                Start(true);
                 m_Config.Crashes++;
 
                 OnCrashed?.Invoke(this, null);
