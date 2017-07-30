@@ -257,8 +257,6 @@ namespace Neustart.Forms
             {
                 if (Visible)
                 {
-                    Debug.Log("Updating app statuses");
-
                     if (Core.UpdateAvailable)
                         BuildDate.Invoke((MethodInvoker)delegate { BuildDate.Text = Core.Version + " (Update available, click here!)"; });
 

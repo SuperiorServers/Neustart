@@ -74,7 +74,6 @@ namespace Neustart
                     m_Process = Process.Start(inf);
                     m_Process.ProcessorAffinity = (IntPtr)m_Config.Affinities;
                     m_Process.PriorityClass = Core.Priorities[m_Config.Priority];
-                    m_Process.WaitForInputIdle(1);
 
                     while (m_Process.MainWindowHandle.ToInt32() == 0) ;
 
