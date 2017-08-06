@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
@@ -25,12 +26,15 @@ namespace Neustart.Forms
             public string CPU;
             public string Memory;
         }
-        private struct AppRowDict
+        public struct AppRowDict
         {
             public AppRowTemplate template;
             public DataGridViewRow row;
         }
-        private ConcurrentDictionary<App, AppRowDict> m_AppRowDictionary = new ConcurrentDictionary<App, AppRowDict>();
+        public static ConcurrentDictionary<App, AppRowDict> m_AppRowDictionary = new ConcurrentDictionary<App, AppRowDict>();
+
+        public static string WebserverStatusMessage = "Webserver stopped";
+        public static bool WebserverRequestGUIRefresh = false;
 
         public Main()
         {
@@ -341,6 +345,25 @@ namespace Neustart.Forms
             Focus();
             BringToFront();
             TaskTrayIcon.Visible = false;
+        }
+
+        private void BtnWebserverClick(object sender, EventArgs e)
+        {
+            if (BtnWebserver.Text == "Stop webserver")
+            {
+                WebServer.Stop();
+                BtnWebserver.Text = "Start webserver";
+            }
+            else
+            {
+                WebServer.Start();
+                BtnWebserver.Text = "Stop webserver";
+            }
+        }
+
+        private void TimerStatus_Tick(object sender, EventArgs e)
+        {
+            LblWebserverStatus.Text = WebserverStatusMessage;
         }
     }
 }
