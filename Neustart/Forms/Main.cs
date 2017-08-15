@@ -356,8 +356,10 @@ namespace Neustart.Forms
             }
             else
             {
-                WebServer.Start();
-                BtnWebserver.Text = "Stop webserver";
+                if (WebServer.Start())
+                {
+                    BtnWebserver.Text = "Stop webserver";
+                }
             }
         }
 

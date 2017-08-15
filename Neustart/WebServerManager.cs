@@ -38,21 +38,6 @@ namespace Neustart
                 _listener.Prefixes.Add(s);
 
             _responderMethod = method;
-            try
-            {
-                _listener.Start();
-            }
-            catch (HttpListenerException ex)
-            {
-                if (ex.Message.Contains("Access is denied"))
-                {
-                    UpdateStatusMessage("Access is denied to port, try running as administrator");
-                }
-                else
-                {
-                    throw;
-                }
-            }
         }
 
         public SimpleWebServer(Func<HttpListenerRequest, string> method, params string[] prefixes)
@@ -60,6 +45,19 @@ namespace Neustart
 
         public void Run()
         {
+            try
+            {
+                _listener.Start();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Access is denied"))
+                {
+                    UpdateStatusMessage("Access is denied to port, try running as administrator");
+                }
+                throw;
+            }
+
             ThreadPool.QueueUserWorkItem((o) =>
             {
                 UpdateStatusMessage("Webserver running");
@@ -93,8 +91,12 @@ namespace Neustart
         public void Stop()
         {
             UpdateStatusMessage("Webserver stopped");
-            _listener.Stop();
-            _listener.Close();
+            try
+            {
+                _listener.Stop();
+                _listener.Close();
+            }
+            catch { }
         }
 
         void UpdateStatusMessage(string status)
@@ -107,11 +109,16 @@ namespace Neustart
     {
         static SimpleWebServer ws;
 
-        public static void Start()
+        public static bool Start()
         {
-            ws = new SimpleWebServer(SendResponse, "http://*:4096/");
-            ws.StatusMessage += StatusMessage;
-            ws.Run();
+            try
+            {
+                ws = new SimpleWebServer(SendResponse, "http://*:4096/");
+                ws.StatusMessage += StatusMessage;
+                ws.Run();
+                return true;
+            }
+            catch { return false; }
         }
 
         public static void Stop()
@@ -136,7 +143,7 @@ namespace Neustart
                 "<!--[if lt IE 9]><script src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js'></script><script src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js'></script><![endif]-->" +
                 "<script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous'></script>" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>" +
-                "<script>function ajax(url){$.get(url, function(data) {alert(data);});}</script>" +
+                "<script>function ajax(url){$.get(url, function(data) {alert(data);window.location.href=\"./\";});}</script>" +
                 "</head><body>";
 
             if (request.RawUrl.StartsWith("/stop/"))
@@ -162,7 +169,7 @@ namespace Neustart
             else if (request.RawUrl == "/")
             {
                 bodyHTML += "<div class='container-fluid'>" +
-                    "<table class='table table-striped'><thead><tr><th>Name</th><th>Crashes</th><th>Uptime</th><th>CPU</th><th>Memory</th><th style='width:55px;'></th><th style='width:65px;'></th></tr></thead><tbody>";
+                    "<table class='table table-striped'><thead><tr><th>Name</th><th>Crashes</th><th>Uptime</th><th>CPU</th><th>Memory</th><th style='width:55px;'></th><!--<th style='width:65px;'></th>--></tr></thead><tbody>";
                 
                 foreach (var entry in m_AppRowDictionary)
                 {
@@ -176,7 +183,7 @@ namespace Neustart
                         statusButton = "<button class='btn btn-danger' onclick='ajax(\"/stop/" + appID + "\");'>Stop</button>";
                     }
 
-                    bodyHTML += "<tr><th>" + row.Cells[1].Value + "</th><td>" + row.Cells[2].Value + "</td><td>" + row.Cells[3].Value + "</td><td>" + row.Cells[4].Value + "</td><td>" + row.Cells[5].Value + "</td><td>" + statusButton + "</td><td><a class='btn btn-primary' href='#' role='button'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span> Edit</a></td></tr>";
+                    bodyHTML += "<tr><th>" + row.Cells[1].Value + "</th><td>" + row.Cells[2].Value + "</td><td>" + row.Cells[3].Value + "</td><td>" + row.Cells[4].Value + "</td><td>" + row.Cells[5].Value + "</td><td>" + statusButton + "</td><!--<td><a class='btn btn-primary' href='#' role='button'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span> Edit</a></td>--></tr>";
                 }
 
                 bodyHTML += "</tbody></table></div>";
