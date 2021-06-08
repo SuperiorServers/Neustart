@@ -39,94 +39,104 @@ namespace Neustart
         private IntPtr  m_Hwnd;
         private CrashWatcher m_CrashWatcher;
 
+        // Lock this process when we're doing stuff that isnt thread safe.
+        private object ProcessLock = new object();
+
         public void Start(bool fromCrash = false)
         {
             if (fromCrash && !m_Config.Enabled) // This means the person happened to stop the process between crash and restart
                 return;
 
-            try
+            lock(ProcessLock)
             {
-                bool didResume = false;
-
-                if (m_Config.PID != -1)
+                try
                 {
-                    try
-                    {
-                        Process proc = Process.GetProcessById(m_Config.PID);
-                        if (proc.MainModule.FileName == m_Config.Path)
-                        {
-                            m_Process = proc;
-                            m_Hwnd = new IntPtr(m_Config.HWND);
+                    bool didResume = false;
 
-                            didResume = true;
+                    if (m_Config.PID != -1)
+                    {
+                        try
+                        {
+                            Process proc = Process.GetProcessById(m_Config.PID);
+                            if (proc.MainModule.FileName == m_Config.Path)
+                            {
+                                m_Process = proc;
+                                m_Hwnd = new IntPtr(m_Config.HWND);
+
+                                didResume = true;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Warning(e.Message);
                         }
                     }
-                    catch (Exception e) {
-                        Debug.Warning(e.Message);
+
+                    if (!didResume)
+                    {
+                        ProcessStartInfo inf = new ProcessStartInfo()
+                        {
+                            WorkingDirectory = System.IO.Path.GetDirectoryName(m_Config.Path),
+                            Arguments = m_Config.Args,
+                            FileName = m_Config.Path,
+                            UseShellExecute = true
+                        };
+
+                        m_Process = Process.Start(inf);
+                        m_Process.ProcessorAffinity = (IntPtr)m_Config.Affinities;
+                        m_Process.PriorityClass = Core.Priorities[m_Config.Priority];
+
+                        while (m_Process.MainWindowHandle.ToInt32() == 0) ;
+
+                        m_Hwnd = m_Process.MainWindowHandle;
+                        m_Config.HWND = m_Hwnd.ToInt32();
+
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(1000);
+                            if (m_Config.Hidden)
+                                ToggleHide(true);
+                        });
                     }
-                }
 
-                if (!didResume)
+                    m_Config.StartTime = m_Process.StartTime;
+                    m_Config.PID = m_Process.Id;
+
+                    m_CrashWatcher = CrashWatcher.New(this);
+                    m_CrashWatcher.OnCrashed += (o, e) => HandleCrash();
+
+                    if (!m_Config.Enabled)
+                        m_Config.Enabled = true;
+
+                    OnStarted?.Invoke(this, null);
+                }
+                catch (Exception e)
                 {
-                    ProcessStartInfo inf = new ProcessStartInfo()
-                    {
-                        WorkingDirectory = System.IO.Path.GetDirectoryName(m_Config.Path),
-                        Arguments = m_Config.Args,
-                        FileName = m_Config.Path,
-                        UseShellExecute = true
-                    };
+                    MessageBox.Show("An error occurred while starting " + m_Config.ID + ": " + e.Message + ". It has been disabled.", "Neustart");
+                    Debug.Error(m_Config.ID + ": Error starting: " + e.Message + ". Disabling.");
 
-                    m_Process = Process.Start(inf);
-                    m_Process.ProcessorAffinity = (IntPtr)m_Config.Affinities;
-                    m_Process.PriorityClass = Core.Priorities[m_Config.Priority];
-
-                    while (m_Process.MainWindowHandle.ToInt32() == 0) ;
-
-                    m_Hwnd = m_Process.MainWindowHandle;
-                    m_Config.HWND = m_Hwnd.ToInt32();
-
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(1000);
-                        if (m_Config.Hidden)
-                            ToggleHide(true);
-                    });
+                    m_Config.Enabled = false;
                 }
-
-                m_Config.StartTime = m_Process.StartTime;
-                m_Config.PID = m_Process.Id;
-
-                m_CrashWatcher = CrashWatcher.New(this);
-                m_CrashWatcher.OnCrashed += (o, e) => HandleCrash();
-
-                if (!m_Config.Enabled)
-                    m_Config.Enabled = true;
-                
-                OnStarted?.Invoke(this, null);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("An error occurred while starting " + m_Config.ID + ": " + e.Message + ". It has been disabled.", "Neustart");
-                Debug.Error(m_Config.ID + ": Error starting: " + e.Message + ". Disabling.");
-
-                m_Config.Enabled = false;
             }
         }
 
         public void Stop()
         {
-            if (m_Config.Enabled)
-                m_Config.Enabled = false;
+            lock (ProcessLock)
+            {
+                if (m_Config.Enabled)
+                    m_Config.Enabled = false;
 
-            if (m_Process != null && !m_Process.HasExited)
-                m_Process.Kill();
-            m_Process = null;
+                if (m_Process != null && !m_Process.HasExited)
+                    m_Process.Kill();
+                m_Process = null;
 
-            m_Config.PID = -1;
-            m_Config.Crashes = 0;
-            m_Config.StartTime = DateTime.MinValue;
+                m_Config.PID = -1;
+                m_Config.Crashes = 0;
+                m_Config.StartTime = DateTime.MinValue;
 
-            OnStopped?.Invoke(this, null);
+                OnStopped?.Invoke(this, null);
+            }
         }
 
         private void HandleCrash()
@@ -161,60 +171,64 @@ namespace Neustart
 
         public void RefreshStatuses(ref Forms.Main.AppRowTemplate template, System.Management.ManagementObjectCollection wmiRes)
         {
-            if (Running)
+            lock(ProcessLock)
             {
-                template.Crashes = Config.Crashes;
-
-                if (m_Process == null || m_Process.HasExited)
+                if (Running)
                 {
-                    template.Title = Config.ID + " | Starting";
+                    template.Crashes = Config.Crashes;
+
+                    if (m_Process == null || m_Process.HasExited)
+                    {
+                        template.Title = Config.ID + " | Starting";
+                        template.Uptime = "00:00:00";
+                        template.CPU = "0%";
+                        template.Memory = "0 MB";
+                    }
+                    else
+                    {
+                        m_Process.Refresh();
+
+                        int capacity = GetWindowTextLength(new HandleRef(this, m_Hwnd)) * 2;
+                        StringBuilder sBuilder = new StringBuilder(capacity);
+                        GetWindowText(new HandleRef(this, m_Hwnd), sBuilder, sBuilder.Capacity);
+                        template.Title = Config.ID + " | " + sBuilder.ToString();
+
+                        double total = (DateTime.Now - m_Process.StartTime).TotalSeconds;
+                        double hours = Math.Floor(total / 3600);
+                        double minutes = Math.Floor((total % 3600) / 60);
+                        double seconds = Math.Floor(total - (hours * 3600) - (minutes * 60));
+                        template.Uptime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+                        template.CPU = "N/A";
+                        try
+                        {
+                            if (wmiRes != null)
+                                foreach (System.Management.ManagementObject obj in wmiRes)
+                                {
+                                    if (Int32.Parse(obj["IDProcess"].ToString()) == m_Process?.Id)
+                                    {
+                                        string procPercent = string.Format("{0}", obj["PercentProcessorTime"]);
+                                        template.CPU = ((double)Int32.Parse(procPercent) / Environment.ProcessorCount).ToString() + "%";
+                                        break;
+                                    }
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Error("An error occurred while looping WMI data: " + e.Message);
+                        }
+
+                        template.Memory = (m_Process.WorkingSet64 / 1048576) + " MB";
+                    }
+                }
+                else
+                {
+                    template.Title = Config.ID;
+                    template.Crashes = 0;
                     template.Uptime = "00:00:00";
                     template.CPU = "0%";
                     template.Memory = "0 MB";
-                } else
-                {
-                    m_Process.Refresh();
-
-                    int capacity = GetWindowTextLength(new HandleRef(this, m_Hwnd)) * 2;
-                    StringBuilder sBuilder = new StringBuilder(capacity);
-                    GetWindowText(new HandleRef(this, m_Hwnd), sBuilder, sBuilder.Capacity);
-                    template.Title = Config.ID + " | " + sBuilder.ToString();
-
-                    double total = (DateTime.Now - m_Process.StartTime).TotalSeconds;
-                    double hours = Math.Floor(total / 3600);
-                    double minutes = Math.Floor((total % 3600) / 60);
-                    double seconds = Math.Floor(total - (hours * 3600) - (minutes * 60));
-                    template.Uptime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-
-                    template.CPU = "N/A";
-                    try
-                    {
-                        if (wmiRes != null)
-                            foreach(System.Management.ManagementObject obj in wmiRes)
-                            {
-                                if (Int32.Parse(obj["IDProcess"].ToString()) == m_Process.Id)
-                                {
-                                    string procPercent = string.Format("{0}", obj["PercentProcessorTime"]);
-                                    template.CPU = ((double)Int32.Parse(procPercent) / Environment.ProcessorCount).ToString() + "%";
-                                    break;
-                                }
-                            }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Error("An error occurred while looping WMI data: " + e.Message);
-                    }
-
-                    template.Memory = (m_Process.WorkingSet64 / 1048576) + " MB";
                 }
-            }
-            else
-            {
-                template.Title = Config.ID;
-                template.Crashes = 0;
-                template.Uptime = "00:00:00";
-                template.CPU = "0%";
-                template.Memory = "0 MB";
             }
         }
 
