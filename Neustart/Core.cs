@@ -131,7 +131,7 @@ namespace Neustart
             updateChecker.AutoReset = true;
             updateChecker.Elapsed += CheckUpdates;
 
-            Task.Run(async() => CheckUpdates(null, null) );
+            Task.Run(() => CheckUpdates(null, null));
         }
 
         private static void CheckUpdates(object sender, System.Timers.ElapsedEventArgs e)

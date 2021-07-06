@@ -83,9 +83,11 @@ namespace Neustart
                 return;
             }
 
-            m_SaveTimer = new System.Timers.Timer(250);
-            m_SaveTimer.AutoReset = false;
-            m_SaveTimer.Elapsed += async (o, args) =>
+            m_SaveTimer = new System.Timers.Timer(250)
+            {
+                AutoReset = false
+            };
+            m_SaveTimer.Elapsed += (o, args) =>
             {
                 Debug.Log("AppConfig modified - saving.");
 
