@@ -48,6 +48,9 @@
             this.BtnNewApp = new System.Windows.Forms.Button();
             this.BtnGithub = new System.Windows.Forms.Button();
             this.TaskTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.BtnWebserver = new System.Windows.Forms.Button();
+            this.LblWebserverStatus = new System.Windows.Forms.Label();
+            this.TimerStatus = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.AppGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -243,11 +246,43 @@
             this.TaskTrayIcon.Text = "Neustart";
             this.TaskTrayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TaskTrayIcon_MouseDoubleClick);
             // 
+            // BtnWebserver
+            // 
+            this.BtnWebserver.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            this.BtnWebserver.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnWebserver.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnWebserver.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.BtnWebserver.ForeColor = System.Drawing.Color.White;
+            this.BtnWebserver.Location = new System.Drawing.Point(285, 22);
+            this.BtnWebserver.Name = "BtnWebserver";
+            this.BtnWebserver.Size = new System.Drawing.Size(126, 34);
+            this.BtnWebserver.TabIndex = 6;
+            this.BtnWebserver.Text = "Start webserver";
+            this.BtnWebserver.UseVisualStyleBackColor = false;
+            this.BtnWebserver.Click += new System.EventHandler(this.BtnWebserverClick);
+            // 
+            // LblWebserverStatus
+            // 
+            this.LblWebserverStatus.AutoSize = true;
+            this.LblWebserverStatus.ForeColor = System.Drawing.Color.White;
+            this.LblWebserverStatus.Location = new System.Drawing.Point(417, 34);
+            this.LblWebserverStatus.Name = "LblWebserverStatus";
+            this.LblWebserverStatus.Size = new System.Drawing.Size(100, 13);
+            this.LblWebserverStatus.TabIndex = 7;
+            this.LblWebserverStatus.Text = "Webserver stopped";
+            // 
+            // TimerStatus
+            // 
+            this.TimerStatus.Enabled = true;
+            this.TimerStatus.Tick += new System.EventHandler(this.TimerStatus_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 384);
+            this.Controls.Add(this.LblWebserverStatus);
+            this.Controls.Add(this.BtnWebserver);
             this.Controls.Add(this.BtnGithub);
             this.Controls.Add(this.BtnNewApp);
             this.Controls.Add(this.BuildDate);
@@ -285,5 +320,8 @@
         private System.Windows.Forms.Button BtnNewApp;
         private System.Windows.Forms.Button BtnGithub;
         private System.Windows.Forms.NotifyIcon TaskTrayIcon;
+        private System.Windows.Forms.Button BtnWebserver;
+        private System.Windows.Forms.Label LblWebserverStatus;
+        private System.Windows.Forms.Timer TimerStatus;
     }
 }
